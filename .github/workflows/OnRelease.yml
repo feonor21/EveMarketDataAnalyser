@@ -31,8 +31,10 @@ jobs:
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path:  Publish/EveMarketDataAnalyser.exe
           asset_name: EveMarketDataAnalyser.exe
           asset_content_type: application/octet-stream
-          release_id: ${{ github.event.release.id }}
