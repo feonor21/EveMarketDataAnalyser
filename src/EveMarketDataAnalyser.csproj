@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <Nullable>enable</Nullable>
     <AssemblyName>EveMarketDataAnalyser</AssemblyName>
     <PackageId>EveMarketDataAnalyser</PackageId>
@@ -11,6 +12,7 @@
     <Description>Analyse le market de stations dans eve online, pour donner la disponibiliter d item.</Description>
     <UseWindowsForms>True</UseWindowsForms>
     <StartupObject>MarketDataAnalyser.Program</StartupObject>
+    
   </PropertyGroup>
 
   <ItemGroup>
