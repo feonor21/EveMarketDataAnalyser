@@ -29,7 +29,7 @@ jobs:
         run: dotnet build src/EveMarketDataAnalyser.csproj --configuration Release --no-restore
 
       - name: Publish One File Executable
-        run: dotnet publish src/EveMarketDataAnalyser.csproj --configuration Release -r win-x64 --framework net6.0-windows --self-contained false /p:PublishSingleFile=true --output Publish/
+        run: dotnet publish src/EveMarketDataAnalyser.csproj --output Publish --configuration Release -r win-x64 --framework net6.0-windows --self-contained false /p:PublishSingleFile=true 
 
       # - name: Upload Release Asset
       #   uses: actions/upload-release-asset@v1
