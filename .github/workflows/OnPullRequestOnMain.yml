@@ -17,8 +17,21 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
-      - name: Build, Cover, Pack and Publish (on push tag)
-        shell: bash
-        run: |
-          dotnet tool install --global dotnet-releaser
-          dotnet-releaser run --github-token "${{secrets.GITHUB_TOKEN}}" dotnet-releaser.toml
+
+
+      - name: Install dependencies
+        run: dotnet restore src\EveMarketDataAnalyser.csproj
+
+      - name: Build
+        run: dotnet build src\EveMarketDataAnalyser.csproj --configuration Release --no-restore
+
+      - name: Publish One File Executable
+        run: dotnet publish src\EveMarketDataAnalyser.csproj --configuration Release -r win-x64 --framework net6.0-windows --self-contained false /p:PublishSingleFile=true --output Publish\
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          asset_path:  Publish\EveMarketDataAnalyser.exe
+          asset_name: EveMarketDataAnalyser.exe
+          asset_content_type: application/octet-stream
+          release_id: ${{ github.event.release.id }}
