@@ -1,4 +1,5 @@
-﻿using MarketDataAnalyser.EVEAPI;
+﻿using EveMarketDataAnalyser.Code.ClassPub;
+using MarketDataAnalyser.EVEAPI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +15,6 @@ namespace MarketDataAnalyser.Graphique
     public partial class PopupSelectionStructure : Form
     {
         public cConfig AppConfig;
-
 
         public PopupSelectionStructure(cConfig aAppConfig)
         {
@@ -79,11 +79,11 @@ namespace MarketDataAnalyser.Graphique
 
         private void button2_Click(object sender, EventArgs e)
         {
-            structure target = null;
+            Structure target = null;
 
             if (AppConfig.AllStructureId != null)
             {
-                foreach (structure item in AppConfig.AllStructureId)
+                foreach (Structure item in AppConfig.AllStructureId)
                 {
                     if (item.structureID == numericUpDown1.Value)
                     {
@@ -93,10 +93,10 @@ namespace MarketDataAnalyser.Graphique
                 }
             }
             else
-                AppConfig.AllStructureId = new List<structure>();
+                AppConfig.AllStructureId = new List<Structure>();
 
             if (target == null)
-                target = new structure();
+                target = new Structure();
             else
                 AppConfig.AllStructureId.Remove(target);
 
@@ -113,7 +113,7 @@ namespace MarketDataAnalyser.Graphique
         {
             if (auth_listBox1_SelectedValueChanged && listBox1.SelectedItem != null)
             {
-                structure target = (structure)listBox1.SelectedItem;
+                Structure target = (Structure)listBox1.SelectedItem;
 
                 numericUpDown1.Value = target.structureID;
                 textBox1.Text = target.name;

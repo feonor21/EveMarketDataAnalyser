@@ -5,6 +5,7 @@ using ESI.NET.Models.Market;
 using ESI.NET.Models.SSO;
 using ESI.NET.Models.Universe;
 using Microsoft.Extensions.Options;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,24 +46,56 @@ namespace MarketDataAnalyser.EVEAPI
             {
                 EsiUrl = "https://esi.evetech.net/",
                 DataSource = DataSource.Tranquility,
-                ClientId = "03d45e27a4bf4afa8b1561adf80a7048",
-                SecretKey = "XP6yIuUfVivQpbyf615QsyK91E0mBixAmwtgBht4",
+                ClientId = cConfig.Instance.EsiCLientId,
+                SecretKey = cConfig.Instance.EsiSecret,
                 CallbackUrl = "http://localhost/oauth-callback",
                 UserAgent = "MARKETDATAANALYSER"
             });
             return config;
         }
 
+        public static void CheckClientId()
+        {
+            if (cConfig.Instance.EsiCLientId == null)
+            {
+                string result = Interaction.InputBox("ESI ClientId", "Config Esi");
+                if (result != "")
+                {
+                    cConfig.Instance.EsiCLientId = result;
+                    cConfig.Instance.SerialConfig();
+                }
+            }
+
+        }
+        public static void CheckSecretKey()
+        {
+            if (cConfig.Instance.EsiSecret == null)
+            {
+                string result = Interaction.InputBox("ESI SecretKey", "Config Esi");
+                if (result != "")
+                {
+                    cConfig.Instance.EsiSecret = result;
+                    cConfig.Instance.SerialConfig();
+                }
+            }
+            
+        }
+
         public static string GetUrlConnection()
         {
+            CheckClientId();
+            CheckSecretKey();
+            var stringscope = "";
+            
+            stringscope = "publicData\r\nesi-universe.read_structures.v1\r\nesi-markets.structure_markets.v1\r\nesi-markets.read_character_orders.v1\r\nesi-markets.read_corporation_orders.v1";
+
+
+            stringscope = stringscope.Replace("\r\n", "%20");
             var urlAUTH = "https://login.eveonline.com/v2/oauth/authorize/?response_type=code" +
                 "&state=MARKETDATAANALYSER" +
                 "&redirect_uri=http://localhost/oauth-callback" +
-                "&client_id=03d45e27a4bf4afa8b1561adf80a7048" +
-                "&scope=publicData%20esi-universe.read_structures.v1%20esi-markets.structure_markets.v1%20esi-markets.read_character_orders.v1%20esi-markets.read_corporation_orders.v1";
-
-
-
+                "&client_id="+cConfig.Instance.EsiCLientId +
+                "&scope="+stringscope;
 
             return urlAUTH;
         }
@@ -74,6 +107,7 @@ namespace MarketDataAnalyser.EVEAPI
                 this.token = await this.EsiClient.SSO.GetToken(grantType, token);
                 this.auth_char = await this.EsiClient.SSO.Verify(this.token);
                 this.EsiClient.SetCharacterData(auth_char);
+                cConfig.Instance.token = this.token.RefreshToken;
             }
             catch (Exception ex)
             {

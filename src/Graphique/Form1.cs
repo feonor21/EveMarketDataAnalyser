@@ -1,5 +1,7 @@
 ﻿using BrightIdeasSoftware;
+using ESI.NET;
 using ESI.NET.Models.Assets;
+using ESI.NET.Models.Character;
 using MarketDataAnalyser.Code.ClassPub;
 using MarketDataAnalyser.Code.Divers;
 using MarketDataAnalyser.EVEAPI;
@@ -34,23 +36,20 @@ namespace MarketDataAnalyser
         {
             InitializeComponent();
 
-
-
-            
             treeListView1resize();
 
             AppConfig = cConfig.DeserialConfig();
 
             RefreshMenu();
 
-
-            this.Text = "MarketDataAnalyzer V2.3.0";
+            this.Text = "MarketDataAnalyzer";
         }
 
-        private void esiTokenToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void esiTokenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
+
                 Process process = new Process();
                 process.StartInfo.FileName = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
                 process.StartInfo.Arguments = EVEEsiInformation.GetUrlConnection();
@@ -59,7 +58,7 @@ namespace MarketDataAnalyser
                 string result = Interaction.InputBox("Code Retour ESI", "FleetLogLoot ADD", "xxxxxxxxxx");
                 if (result != "")
                 {
-                    EVEEsiInformation.Instance.Connection(result,ESI.NET.Enumerations.GrantType.AuthorizationCode);
+                    await EVEEsiInformation.Instance.Connection(result,ESI.NET.Enumerations.GrantType.AuthorizationCode);
                     AppConfig.SerialConfig();
                     RefreshMenu();
                 }

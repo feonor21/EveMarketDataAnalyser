@@ -1,4 +1,5 @@
-﻿using MarketDataAnalyser.Code.ClassPub;
+﻿using EveMarketDataAnalyser.Code.ClassPub;
+using MarketDataAnalyser.Code.ClassPub;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -27,15 +28,18 @@ namespace MarketDataAnalyser
         private static string getPathFile() { return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MarketDataAnalyser.json"; }
 
 
+        public string EsiCLientId = null;
+        public string EsiSecret = null;
         public string token = null;
+
+
         public long structureID { get; set; }
-        public List<structure> AllStructureId { get; set; }
+        public List<Structure> AllStructureId { get; set; }
 
+        
         public List<MarketItem> ListItem = new List<MarketItem>();
-
         [JsonIgnore]
         public List<MarketGroup> ListMarketGroup = new List<MarketGroup>();
-        
         public List<Doctrine> Doctrines = new List<Doctrine>();
         
 
@@ -72,10 +76,5 @@ namespace MarketDataAnalyser
 
             return result;
         }
-    }
-    public class structure
-    {
-        public long structureID { get; set; }
-        public string name { get; set; }
     }
 }
