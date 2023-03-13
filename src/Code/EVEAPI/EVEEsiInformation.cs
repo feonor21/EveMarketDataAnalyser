@@ -87,7 +87,7 @@ namespace MarketDataAnalyser.EVEAPI
             CheckSecretKey();
             var stringscope = "";
             
-            stringscope = "publicData\r\nesi-universe.read_structures.v1\r\nesi-markets.structure_markets.v1\r\nesi-markets.read_character_orders.v1\r\nesi-markets.read_corporation_orders.v1";
+            stringscope = "publicData\r\nesi-universe.read_structures.v1\r\nesi-markets.structure_markets.v1\r\nesi-markets.read_character_orders.v1";
 
 
             stringscope = stringscope.Replace("\r\n", "%20");
