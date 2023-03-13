@@ -226,7 +226,7 @@ namespace MarketDataAnalyser
 
         private async void RefreshMenu()
         {
-            if (AppConfig.token != null)
+            if (AppConfig.token != null && AppConfig.token!= "")
             {
                 await EVEEsiInformation.Instance.Connection(AppConfig.token, ESI.NET.Enumerations.GrantType.RefreshToken);
 

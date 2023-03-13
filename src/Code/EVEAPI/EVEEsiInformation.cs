@@ -49,7 +49,7 @@ namespace MarketDataAnalyser.EVEAPI
                 ClientId = cConfig.Instance.EsiCLientId,
                 SecretKey = cConfig.Instance.EsiSecret,
                 CallbackUrl = "http://localhost/oauth-callback",
-                UserAgent = "MARKETDATAANALYSER"
+                UserAgent = "EVEMARKETDATAANALYSER"
             });
             return config;
         }
@@ -92,7 +92,7 @@ namespace MarketDataAnalyser.EVEAPI
 
             stringscope = stringscope.Replace("\r\n", "%20");
             var urlAUTH = "https://login.eveonline.com/v2/oauth/authorize/?response_type=code" +
-                "&state=MARKETDATAANALYSER" +
+                "&state=0" +
                 "&redirect_uri=http://localhost/oauth-callback" +
                 "&client_id="+cConfig.Instance.EsiCLientId +
                 "&scope="+stringscope;
@@ -108,6 +108,7 @@ namespace MarketDataAnalyser.EVEAPI
                 this.auth_char = await this.EsiClient.SSO.Verify(this.token);
                 this.EsiClient.SetCharacterData(auth_char);
                 cConfig.Instance.token = this.token.RefreshToken;
+                cConfig.Instance.SerialConfig();
             }
             catch (Exception ex)
             {
