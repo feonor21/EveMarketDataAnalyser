@@ -12,14 +12,14 @@ namespace MarketDataAnalyser.Code.ClassPub
 
         public List<MarketItem> items()
         {
-            return cConfig.Instance.ListItem.Where(x => x.GroupName == this.Name).ToList();            
+            return cConfig.Instance.Data.ListItem.Where(x => x.GroupName == this.Name).ToList();            
         }
         
         public static List<MarketGroup> GetAllMarketGroup()
         {
             List<MarketGroup> result = new List<MarketGroup>();
 
-            foreach (var item in cConfig.Instance.ListItem)
+            foreach (var item in cConfig.Instance.Data.ListItem)
             {
                 if (!result.Any(x=>x.Name == item.GroupName))
                     result.Add(new MarketGroup() { Name = item.GroupName });

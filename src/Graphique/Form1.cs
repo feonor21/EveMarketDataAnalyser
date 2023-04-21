@@ -2,6 +2,7 @@
 using ESI.NET;
 using ESI.NET.Models.Assets;
 using ESI.NET.Models.Character;
+using EveMarketDataAnalyser.Code.ClassPub;
 using MarketDataAnalyser.Code.ClassPub;
 using MarketDataAnalyser.Code.Divers;
 using MarketDataAnalyser.EVEAPI;
@@ -28,7 +29,6 @@ namespace MarketDataAnalyser
         public cConfig AppConfig;
 
         public int ModeMarket = 0;
-        public bool CharAuthAndConnected = false;
 
         List<ESI.NET.Models.Market.Order> orderglobal = new List<ESI.NET.Models.Market.Order>();
 
@@ -42,6 +42,8 @@ namespace MarketDataAnalyser
 
             RefreshMenu();
 
+
+
             this.Text = "MarketDataAnalyzer";
         }
 
@@ -54,11 +56,11 @@ namespace MarketDataAnalyser
                 process.StartInfo.FileName = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
                 process.StartInfo.Arguments = EVEEsiInformation.GetUrlConnection();
                 process.Start();
-                
+
                 string result = Interaction.InputBox("Code Retour ESI", "FleetLogLoot ADD", "xxxxxxxxxx");
                 if (result != "")
                 {
-                    await EVEEsiInformation.Instance.Connection(result,ESI.NET.Enumerations.GrantType.AuthorizationCode);
+                    await EVEEsiInformation.Instance.Connection(result, ESI.NET.Enumerations.GrantType.AuthorizationCode);
                     AppConfig.SerialConfig();
                     RefreshMenu();
                 }
@@ -89,7 +91,7 @@ namespace MarketDataAnalyser
                 MessageBox.Show("Erreur dans la creation de la liaison ESI! \n" + ex.Message);
             }
         }
-        
+
         private void Mode_MarketGroup_Click(object sender, EventArgs e)
         {
             ModeMarket = 0;
@@ -103,6 +105,10 @@ namespace MarketDataAnalyser
 
         private async void btn_add_Item_Click(object sender, EventArgs e)
         {
+            await EVEEsiInformation.Instance.Connection(AppConfig.token, ESI.NET.Enumerations.GrantType.RefreshToken);
+            var test = await EVEEsiInformation.Instance.GetStructureAsync(1041331926562);
+
+
             if (this.ItemContent.Text == "") { return; }
 
             try
@@ -111,9 +117,9 @@ namespace MarketDataAnalyser
                 this.ItemContent.Text = "";
                 RefreshMenu();
             }
-            catch (Exception ex )
-            {MessageBox.Show(ex.Message, "ERROR : Add Item", MessageBoxButtons.OK, MessageBoxIcon.Error);}
-            
+            catch (Exception ex)
+            { MessageBox.Show(ex.Message, "ERROR : Add Item", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+
 
         }
         private async void Doctrine_Add_ClickAsync(object sender, EventArgs e)
@@ -129,7 +135,7 @@ namespace MarketDataAnalyser
             catch (Exception ex)
             { MessageBox.Show(ex.Message, "ERROR : Add Doctrine", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
-        
+
         private void treeListView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (this.treeListView1.SelectedItem != null)
@@ -182,7 +188,7 @@ namespace MarketDataAnalyser
 
                 if (marketitem.Volume < marketitem.Seuil)
                 {
-                    
+
                     e.Item.BackColor = Color.Bisque;
                     if (marketitem.i_am_seller && marketitem.PricePerso != marketitem.Price)
                         e.Item.BackColor = Color.LightSkyBlue;
@@ -193,7 +199,7 @@ namespace MarketDataAnalyser
                 }
                 else
                 {
-                    
+
                     e.Item.BackColor = Color.Violet;
                     if (marketitem.i_am_seller && marketitem.PricePerso != marketitem.Price)
                         e.Item.BackColor = Color.RoyalBlue;
@@ -226,16 +232,17 @@ namespace MarketDataAnalyser
 
         private async void RefreshMenu()
         {
-            if (AppConfig.token != null && AppConfig.token!= "")
+            if (AppConfig.token != null && AppConfig.token != "")
             {
-                await EVEEsiInformation.Instance.Connection(AppConfig.token, ESI.NET.Enumerations.GrantType.RefreshToken);
 
                 try
                 {
+                    await EVEEsiInformation.Instance.Connection(AppConfig.token, ESI.NET.Enumerations.GrantType.RefreshToken);
+
                     this.esiTokenToolStripMenuItem.Text = EVEEsiInformation.Instance.GetCharacterName();
 
                     if (AppConfig.structureID > 0)
-                        this.structureIDToolStripMenuItem.Text = AppConfig.AllStructureId.Find(x=>x.structureID== AppConfig.structureID).name;
+                        this.structureIDToolStripMenuItem.Text = AppConfig.AllStructureId.Find(x => x.structureID == AppConfig.structureID).name;
 
 
                     switch (ModeMarket)
@@ -249,7 +256,7 @@ namespace MarketDataAnalyser
 
                                 throw new ArgumentException("should be Doctrine");
                             };
-                            this.treeListView1.SetObjects(AppConfig.Doctrines);
+                            this.treeListView1.SetObjects(AppConfig.Data.Doctrines);
                             //this.treeListView1.CollapseAll();
                             this.Mode_Doctrine.BackColor = Color.DarkGreen;
                             this.Mode_MarketGroup.BackColor = Color.WhiteSmoke;
@@ -260,7 +267,7 @@ namespace MarketDataAnalyser
                             {
                                 if (x is MarketGroup)
                                     return ((MarketGroup)x).items();
-                                
+
                                 throw new ArgumentException("should be group");
                             };
                             this.treeListView1.SetObjects(MarketGroup.GetAllMarketGroup());
@@ -276,13 +283,13 @@ namespace MarketDataAnalyser
                             this.Mode_MarketGroup.BackColor = Color.DarkGreen;
                             break;
                     }
-                    
 
-                    CharAuthAndConnected = true;
+                    button1.Enabled = true;
                 }
                 catch (Exception)
                 {
-                    CharAuthAndConnected = false;
+                    MessageBox.Show("Erreur dans le token, peut etre expirer... refais ta connexion.\n\nSi ca marche toujours pas,\nContact Feo Les Bon Tuyau", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    button1.Enabled = false;
                 }
 
             }
@@ -300,7 +307,7 @@ namespace MarketDataAnalyser
             this.treeListView1.Columns[7].Width = (int)Math.Round((double)this.treeListView1.Width * 0.125);
             this.treeListView1.Columns[8].Width = 0;
         }
- 
+
         private async void refreshMarketReel()
         {
             RefreshMenu();
@@ -309,7 +316,7 @@ namespace MarketDataAnalyser
 
             orderglobal.Clear();
 
-            foreach (var item in AppConfig.ListItem)
+            foreach (var item in AppConfig.Data.ListItem)
             {
                 item.CleanMarketInfo();
             }
@@ -317,7 +324,7 @@ namespace MarketDataAnalyser
             await refreshMarketReelMyOrderAsync();
 
 
-            List <Task> alltask = new List<Task>();
+            List<Task> alltask = new List<Task>();
             int parallelismeLimit = 5;
             for (int i = 1; i <= parallelismeLimit; i++)
             {
@@ -329,7 +336,7 @@ namespace MarketDataAnalyser
 
             foreach (ESI.NET.Models.Market.Order item in orderglobal)
             {
-                MarketItem itemmarket = AppConfig.ListItem.FirstOrDefault(i => i.typeID == item.TypeId);
+                MarketItem itemmarket = AppConfig.Data.ListItem.FirstOrDefault(i => i.typeID == item.TypeId);
                 if (!item.IsBuyOrder && itemmarket != null)
                 {
                     itemmarket.Volume += item.VolumeRemain;
@@ -338,7 +345,7 @@ namespace MarketDataAnalyser
             }
 
             alltask = new List<Task>();
-            foreach (MarketItem item in AppConfig.ListItem)
+            foreach (MarketItem item in AppConfig.Data.ListItem)
             {
                 alltask.Add(Task.Run(async () =>
                 {
@@ -347,9 +354,9 @@ namespace MarketDataAnalyser
                 }));
             }
             Task.WaitAll(alltask.ToArray());
-            
+
             SetPercentDone("Refresh");
-            
+
             AppConfig.SerialConfig();
 
         }
@@ -364,12 +371,12 @@ namespace MarketDataAnalyser
             {
                 if (!item.IsBuyOrder && item.LocationId == AppConfig.structureID)
                 {
-                    var itemmarket = AppConfig.ListItem.FirstOrDefault(i => i.typeID == item.TypeId);
+                    var itemmarket = AppConfig.Data.ListItem.FirstOrDefault(i => i.typeID == item.TypeId);
                     if (itemmarket == null)
                     {
                         var EsiTypeResult = await EVEEsiInformation.Instance.GetItemAsync(item.TypeId);
                         itemmarket = new MarketItem() { typeID = item.TypeId, Name = EsiTypeResult.Name, Price = decimal.MaxValue, PricePerso = decimal.MaxValue, GroupName = "Undifined" };
-                        AppConfig.ListItem.Add(itemmarket);
+                        AppConfig.Data.ListItem.Add(itemmarket);
                     }
 
                     AppConfig.SerialConfig();
@@ -381,12 +388,12 @@ namespace MarketDataAnalyser
                 }
             }
         }
-        private Task refreshMarketReelAllOrderTask(int initialpage,int step,int limit =5000)
+        private Task refreshMarketReelAllOrderTask(int initialpage, int step, int limit = 5000)
         {
             return Task.Run(async () =>
-            {               
-             
-                for (int i = initialpage; i <= limit; i+= step)
+            {
+
+                for (int i = initialpage; i <= limit; i += step)
                 {
                     var orderpage = await EVEEsiInformation.Instance.GetStructureOrderAsync(AppConfig.structureID, i);
                     if (orderpage != null)
@@ -452,13 +459,13 @@ namespace MarketDataAnalyser
                                     tmpmarket.Price += (decimal)(order.Volume * order.Average);
                                 }
                             }
-                            if (AppConfig.ListItem.FirstOrDefault(tmp => tmp.typeID == tmpmarket.typeID) != null)
+                            if (AppConfig.Data.ListItem.FirstOrDefault(tmp => tmp.typeID == tmpmarket.typeID) != null)
                             {
                                 tmpmarket.i_am_seller = true;
                             }
 
 
-                             if (tmpmarket.Volume > 0)
+                            if (tmpmarket.Volume > 0)
                             {
                                 ListItemAnalyser.Add(tmpmarket);
                                 this.treeListView1.SetObjects(ListItemAnalyser);
@@ -478,7 +485,7 @@ namespace MarketDataAnalyser
         {
             if (this.button1.InvokeRequired)
             {
-                this.button1.Invoke(new Action(() => 
+                this.button1.Invoke(new Action(() =>
                 {
                     this.button1.Text = txt;
                     this.button1.Enabled = (txt == "Refresh");
@@ -491,5 +498,116 @@ namespace MarketDataAnalyser
             }
         }
 
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string filePath = cConfig.getPathFile();
+                // Ouvre l'explorateur de fichiers et sélectionne le fichier
+                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{filePath}\"");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\MarketDataAnalyser_DATA_" + DateTime.Now.ToString("yyyy_MM_dd") + ".json";
+                AppConfig.ExportData(filePath);
+                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{filePath}\"");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                // Vérifier si l'utilisateur veut remplacer les données existantes
+                if (MessageBox.Show("Voulez-vous vraiment remplacer toutes les données existantes ?", "Confirmation", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                {
+                    var openFileDialog = new OpenFileDialog();
+                    openFileDialog.Filter = "Fichiers JSON (*.json)|*.json|Tous les fichiers (*.*)|*.*";
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        // Lire le fichier JSON sélectionné par l'utilisateur
+                        string jsonText = File.ReadAllText(openFileDialog.FileName);
+
+                        // Désérialiser le JSON dans un objet Personne
+                        cConfigData newData = JsonConvert.DeserializeObject<cConfigData>(jsonText);
+
+                        AppConfig.Data = newData;
+
+                        AppConfig.SerialConfig();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("ptit péteux vas :P");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void exportStructureToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\MarketDataAnalyser_STRUCTURE_" + DateTime.Now.ToString("yyyy_MM_dd") + ".json";
+                AppConfig.ExportStructure(filePath);
+                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{filePath}\"");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Vérifier si l'utilisateur veut remplacer les données existantes
+                if (MessageBox.Show("Voulez-vous vraiment remplacer toutes les Structure existantes ?", "Confirmation", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                {
+                    var openFileDialog = new OpenFileDialog();
+                    openFileDialog.Filter = "Fichiers JSON (*.json)|*.json|Tous les fichiers (*.*)|*.*";
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        // Lire le fichier JSON sélectionné par l'utilisateur
+                        string jsonText = File.ReadAllText(openFileDialog.FileName);
+
+                        // Désérialiser le JSON dans un objet Personne
+                        List<Structure> newData = JsonConvert.DeserializeObject<List<Structure>>(jsonText);
+
+                        AppConfig.AllStructureId = newData;
+
+                        AppConfig.SerialConfig();
+                    }
+                }
+                else
+                {
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }

@@ -36,9 +36,9 @@ namespace MarketDataAnalyser.Code.ClassPub
 
 
 
-            if (cConfig.Instance.ListItem.FirstOrDefault(i => i.typeID == itemID) == null)
+            if (cConfig.Instance.Data.ListItem.FirstOrDefault(i => i.typeID == itemID) == null)
             {
-                cConfig.Instance.ListItem.Add(temp);
+                cConfig.Instance.Data.ListItem.Add(temp);
                 cConfig.Instance.SerialConfig();
             }
         }
@@ -51,7 +51,7 @@ namespace MarketDataAnalyser.Code.ClassPub
         {
             int totalSeuil = this.Seuil;
 
-            foreach (var doctrine in cConfig.Instance.Doctrines)
+            foreach (var doctrine in cConfig.Instance.Data.Doctrines)
             {
                 foreach (var DoctrineLink in doctrine.DoctrineLinks.Where(x => x.typeID == this.typeID))
                 {

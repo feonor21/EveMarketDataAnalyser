@@ -37,8 +37,8 @@ namespace MarketDataAnalyser.Graphique
         private void button3_Click(object sender, EventArgs e)
         {
             //del
-            if (AppConfig.Doctrines.Contains(targetItem))
-                AppConfig.Doctrines.Remove(targetItem);
+            if (AppConfig.Data.Doctrines.Contains(targetItem))
+                AppConfig.Data.Doctrines.Remove(targetItem);
             this.DialogResult = DialogResult.OK;
         }
     }

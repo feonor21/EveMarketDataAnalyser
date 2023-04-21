@@ -52,14 +52,14 @@ namespace MarketDataAnalyser
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (AppConfig.Doctrines.Any(x => x.DoctrineLinks.Any(y => y.typeID == targetItem.typeID)))
+            if (AppConfig.Data.Doctrines.Any(x => x.DoctrineLinks.Any(y => y.typeID == targetItem.typeID)))
             {
                 MessageBox.Show("l item est aussi dans une doctrine deleter la doctrine avant.");
                 this.DialogResult = DialogResult.Cancel;
                 return;
             }
-            if (AppConfig.ListItem.Contains(targetItem))
-                AppConfig.ListItem.Remove(targetItem);
+            if (AppConfig.Data.ListItem.Contains(targetItem))
+                AppConfig.Data.ListItem.Remove(targetItem);
             this.DialogResult = DialogResult.OK;
         }
     }

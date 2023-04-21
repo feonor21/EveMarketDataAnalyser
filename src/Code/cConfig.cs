@@ -25,7 +25,7 @@ namespace MarketDataAnalyser
         {
             instance = this;
         }
-        private static string getPathFile() { return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MarketDataAnalyser.json"; }
+        public static string getPathFile() { return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MarketDataAnalyser.json"; }
 
 
         public string EsiCLientId = null;
@@ -36,13 +36,41 @@ namespace MarketDataAnalyser
         public long structureID { get; set; }
         public List<Structure> AllStructureId { get; set; }
 
-        
-        public List<MarketItem> ListItem = new List<MarketItem>();
-        [JsonIgnore]
-        public List<MarketGroup> ListMarketGroup = new List<MarketGroup>();
-        public List<Doctrine> Doctrines = new List<Doctrine>();
-        
+        public cConfigData Data = new cConfigData();
 
+
+        public void ExportData(string outputPath)
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+            serializer.Formatting = Formatting.Indented;
+
+            if (!File.Exists(outputPath))
+                File.Create(outputPath).Close();
+
+            using (StreamWriter sw = new StreamWriter(outputPath))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, this.Data);
+            }
+
+        }
+        public void ExportStructure(string outputPath)
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+            serializer.Formatting = Formatting.Indented;
+
+            if (!File.Exists(outputPath))
+                File.Create(outputPath).Close();
+
+            using (StreamWriter sw = new StreamWriter(outputPath))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, this.AllStructureId);
+            }
+
+        }
 
         public void SerialConfig()
         {
@@ -76,5 +104,14 @@ namespace MarketDataAnalyser
 
             return result;
         }
+    }
+
+    public class cConfigData
+    {
+
+        public List<MarketItem> ListItem = new List<MarketItem>();
+        [JsonIgnore]
+        public List<MarketGroup> ListMarketGroup = new List<MarketGroup>();
+        public List<Doctrine> Doctrines = new List<Doctrine>();
     }
 }
