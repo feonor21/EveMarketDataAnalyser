@@ -29,10 +29,12 @@ namespace MarketDataAnalyser.Code.ClassPub
             }
 
             var EsiTypeResult = await EVEEsiInformation.Instance.GetItemAsync(itemID);
+            var GroupNameResult = await EVEEsiInformation.Instance.GetGroupAsync(EsiTypeResult.GroupId);
+
             var temp = new MarketItem();
             temp.typeID = itemID;
             temp.Name = EsiTypeResult.Name;
-            temp.GroupName = "Manual Added";
+            temp.GroupName = GroupNameResult.Name;
 
 
 
