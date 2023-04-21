@@ -69,16 +69,16 @@ namespace MarketDataAnalyser.Code.ClassPub
                 if (itemID == 0)
                     throw new Exception(keypair.Key + " item inconnu");
 
-                if (cConfig.Instance.ListItem.FirstOrDefault(i => i.typeID == itemID) == null)
+                if (cConfig.Instance.Data.ListItem.FirstOrDefault(i => i.typeID == itemID) == null)
                     await MarketItem.CreateMarketItem(itemID.ToString());
 
                 temp.AddItemLink(itemID, keypair.Value);
             }
 
-            if (cConfig.Instance.Doctrines.FirstOrDefault(i => i.Name == temp.Name) != null)
-                cConfig.Instance.Doctrines.Remove(cConfig.Instance.Doctrines.FirstOrDefault(i => i.Name == temp.Name));
+            if (cConfig.Instance.Data.Doctrines.FirstOrDefault(i => i.Name == temp.Name) != null)
+                cConfig.Instance.Data.Doctrines.Remove(cConfig.Instance.Data.Doctrines.FirstOrDefault(i => i.Name == temp.Name));
 
-            cConfig.Instance.Doctrines.Add(temp);
+            cConfig.Instance.Data.Doctrines.Add(temp);
 
             cConfig.Instance.SerialConfig();
         }
@@ -100,7 +100,7 @@ namespace MarketDataAnalyser.Code.ClassPub
             List<MarketItem> result = new List<MarketItem>();
             foreach (var i in DoctrineLinks)
             {
-                result.Add(cConfig.Instance.ListItem.Find(x => x.typeID == i.typeID));
+                result.Add(cConfig.Instance.Data.ListItem.Find(x => x.typeID == i.typeID));
             }
             return result;
         }
@@ -111,7 +111,7 @@ namespace MarketDataAnalyser.Code.ClassPub
             
             foreach (var DoctrineLink in DoctrineLinks)
             {
-                var volumeItem = cConfig.Instance.ListItem.Find(x => x.typeID == DoctrineLink.typeID).Volume;
+                var volumeItem = cConfig.Instance.Data.ListItem.Find(x => x.typeID == DoctrineLink.typeID).Volume;
                 var quantitySeuil = DoctrineLink.Quantity;
                 var ResultRaw = volumeItem / quantitySeuil;
                 if(ResultRaw < minimum) 
