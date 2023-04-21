@@ -53,7 +53,15 @@ namespace MarketDataAnalyser
             {
 
                 Process process = new Process();
-                process.StartInfo.FileName = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
+
+                var googlepath = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
+                
+                if(File.Exists(googlepath))
+                    process.StartInfo.FileName = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
+                else
+                    process.StartInfo.FileName = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe";
+
+
                 process.StartInfo.Arguments = EVEEsiInformation.GetUrlConnection();
                 process.Start();
 
