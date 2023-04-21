@@ -609,5 +609,44 @@ namespace MarketDataAnalyser
                 MessageBox.Show(ex.Message);
             }
         }
+
+
+        private void treeListView1_ModelCanDrop(object sender, ModelDropEventArgs e)
+        {
+            if (ModeMarket == 1)
+            {
+                e.Effect = DragDropEffects.None;
+                return;
+            }
+
+            MarketItem itemTarget = e.TargetModel as MarketItem;
+            if (itemTarget == null)
+                e.Effect = DragDropEffects.None;
+            else
+                e.Effect = DragDropEffects.Move;
+
+        }
+
+        private void treeListView1_ModelDropped(object sender, ModelDropEventArgs e)
+        {
+            // If they didn't drop on anything, then don't do anything
+            if (e.TargetModel == null)
+                return;
+
+
+            MarketItem itemTarget = e.TargetModel as MarketItem;
+
+            foreach (var item in e.SourceModels)
+            {
+
+                MarketItem itemSource = item as MarketItem;
+                if (itemSource != null)
+                    itemSource.GroupName = itemTarget.GroupName;
+            }
+
+            // Force them to refresh
+            AppConfig.SerialConfig();
+            e.RefreshObjects();
+        }
     }
 }

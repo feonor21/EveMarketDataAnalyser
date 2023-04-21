@@ -87,45 +87,45 @@
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(180, 22);
+            toolStripMenuItem1.Size = new Size(161, 22);
             toolStripMenuItem1.Text = "Show Config.ini";
             toolStripMenuItem1.Click += toolStripMenuItem1_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            toolStripSeparator1.Size = new Size(158, 6);
             // 
             // toolStripMenuItem2
             // 
             toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new Size(180, 22);
+            toolStripMenuItem2.Size = new Size(161, 22);
             toolStripMenuItem2.Text = "Export Data";
             toolStripMenuItem2.Click += toolStripMenuItem2_Click;
             // 
             // toolStripMenuItem3
             // 
             toolStripMenuItem3.Name = "toolStripMenuItem3";
-            toolStripMenuItem3.Size = new Size(180, 22);
+            toolStripMenuItem3.Size = new Size(161, 22);
             toolStripMenuItem3.Text = "Import Data";
             toolStripMenuItem3.Click += toolStripMenuItem3_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(177, 6);
+            toolStripSeparator2.Size = new Size(158, 6);
             // 
             // exportStructureToolStripMenuItem
             // 
             exportStructureToolStripMenuItem.Name = "exportStructureToolStripMenuItem";
-            exportStructureToolStripMenuItem.Size = new Size(180, 22);
+            exportStructureToolStripMenuItem.Size = new Size(161, 22);
             exportStructureToolStripMenuItem.Text = "Export Structure";
             exportStructureToolStripMenuItem.Click += exportStructureToolStripMenuItem_Click;
             // 
             // toolStripMenuItem4
             // 
             toolStripMenuItem4.Name = "toolStripMenuItem4";
-            toolStripMenuItem4.Size = new Size(180, 22);
+            toolStripMenuItem4.Size = new Size(161, 22);
             toolStripMenuItem4.Text = "Import Structure";
             toolStripMenuItem4.Click += toolStripMenuItem4_Click;
             // 
@@ -272,10 +272,13 @@
             treeListView1.AllColumns.Add(olvColumn6);
             treeListView1.AllColumns.Add(olvColumn7);
             treeListView1.AllColumns.Add(olvColumn8);
+            treeListView1.AllowDrop = true;
             treeListView1.CellEditUseWholeCell = false;
             treeListView1.Columns.AddRange(new ColumnHeader[] { olvColumn1, olvColumn3, olvColumn4, olvColumn5, olvColumn9, olvColumn10, olvColumn6, olvColumn7, olvColumn8 });
             treeListView1.Dock = DockStyle.Fill;
             treeListView1.FullRowSelect = true;
+            treeListView1.IsSimpleDragSource = true;
+            treeListView1.IsSimpleDropSink = true;
             treeListView1.Location = new Point(236, 24);
             treeListView1.Margin = new Padding(4, 3, 4, 3);
             treeListView1.Name = "treeListView1";
@@ -286,6 +289,8 @@
             treeListView1.View = View.Details;
             treeListView1.VirtualMode = true;
             treeListView1.FormatRow += treeListView1_FormatRow;
+            treeListView1.ModelCanDrop += treeListView1_ModelCanDrop;
+            treeListView1.ModelDropped += treeListView1_ModelDropped;
             treeListView1.MouseDoubleClick += treeListView1_MouseDoubleClick;
             // 
             // olvColumn1
