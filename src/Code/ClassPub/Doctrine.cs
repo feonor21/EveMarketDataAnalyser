@@ -86,8 +86,8 @@ namespace MarketDataAnalyser.Code.ClassPub
         public string Name { get; set; }
         
         public List<DoctrineItemLink> DoctrineLinks = new List<DoctrineItemLink>();
-        public int Seuil { get; set; }
-        public int TotalSeuil()
+        public long Seuil { get; set; }
+        public long TotalSeuil()
         {
             return Seuil;
         }
@@ -120,6 +120,10 @@ namespace MarketDataAnalyser.Code.ClassPub
 
 
             return minimum;
+        }
+        public long VolumeMissing()
+        {
+            return (TotalSeuil() - Volume());
         }
     }
 

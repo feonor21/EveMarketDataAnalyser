@@ -48,10 +48,10 @@ namespace MarketDataAnalyser.Code.ClassPub
         public int typeID { get; set; }
         public string Name { get; set; }
         public string GroupName { get; set; }
-        public int Seuil { get; set; }
-        public int TotalSeuil()
+        public long Seuil { get; set; }
+        public long TotalSeuil()
         {
-            int totalSeuil = this.Seuil;
+            long totalSeuil = this.Seuil;
 
             foreach (var doctrine in cConfig.Instance.Data.Doctrines)
             {
@@ -67,6 +67,10 @@ namespace MarketDataAnalyser.Code.ClassPub
         public long Volume { get; set; }
         [JsonIgnore]
         public int VolumePerso { get; set; }
+        public long VolumeMissing()
+        {
+            return (TotalSeuil()- VolumePerso);
+        }
         [JsonIgnore]
         public decimal Price { get; set; }
         public string PriceParse()
