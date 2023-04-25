@@ -36,10 +36,11 @@ namespace MarketDataAnalyser
         {
             InitializeComponent();
 
+            treeListViewCreate();
             treeListView1resize();
 
             AppConfig = cConfig.DeserialConfig();
-
+                
             RefreshMenu();
 
 
@@ -55,8 +56,8 @@ namespace MarketDataAnalyser
                 Process process = new Process();
 
                 var googlepath = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
-                
-                if(File.Exists(googlepath))
+
+                if (File.Exists(googlepath))
                     process.StartInfo.FileName = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
                 else
                     process.StartInfo.FileName = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe";
@@ -303,12 +304,43 @@ namespace MarketDataAnalyser
             }
         }
 
+        private void treeListViewCreate()
+        {
+            this.treeListView1.Columns.Clear();
+            treeListViewCreateColumn("Name", "Name");
+            treeListViewCreateColumn("Seuil", "TotalSeuil", "{0:#,##0}");
+            treeListViewCreateColumn("VolumePerso", "VolumePerso", "{0:#,##0}");
+            treeListViewCreateColumn("Volume", "Volume", "{0:#,##0}");
+            treeListViewCreateColumn("Missing", "VolumeMissing", "{0:#,##0}");
+            treeListViewCreateColumn("BuyPrice", "BuyPriceParse");
+            treeListViewCreateColumn("SellPrice(+20%)", "SellPriceParse");
+            treeListViewCreateColumn("PricePerso", "PricePersoParse");
+            treeListViewCreateColumn("Price", "PriceParse");
+            treeListViewCreateColumn("i_am_seller", "i_am_seller");
+
+        }
+        private void treeListViewCreateColumn(string HeaderText, string PropertyName,string format = "")
+        {
+            OLVColumn columnHeader = new BrightIdeasSoftware.OLVColumn();
+            columnHeader.Width = 1;
+            columnHeader.Text = HeaderText;
+            columnHeader.AspectName = PropertyName;
+            if (format != "")
+                columnHeader.AspectToStringFormat = format;
+            columnHeader.Hideable = false;
+            columnHeader.Searchable = false;
+            columnHeader.IsEditable = false;
+            this.treeListView1.Columns.Add(columnHeader);
+
+        }
+
         private void treeListView1resize()
         {
             this.treeListView1.Columns[0].Width = (int)Math.Round((double)this.treeListView1.Width * 0.15);
-            this.treeListView1.Columns[1].Width = (int)Math.Round((double)this.treeListView1.Width * 0.10);
-            this.treeListView1.Columns[2].Width = (int)Math.Round((double)this.treeListView1.Width * 0.10);
-            this.treeListView1.Columns[3].Width = (int)Math.Round((double)this.treeListView1.Width * 0.10);
+            this.treeListView1.Columns[1].Width = (int)Math.Round((double)this.treeListView1.Width * 0.075);
+            this.treeListView1.Columns[2].Width = (int)Math.Round((double)this.treeListView1.Width * 0.075);
+            this.treeListView1.Columns[3].Width = (int)Math.Round((double)this.treeListView1.Width * 0.075);
+            this.treeListView1.Columns[3].Width = (int)Math.Round((double)this.treeListView1.Width * 0.075);
             this.treeListView1.Columns[4].Width = (int)Math.Round((double)this.treeListView1.Width * 0.125);
             this.treeListView1.Columns[5].Width = (int)Math.Round((double)this.treeListView1.Width * 0.125);
             this.treeListView1.Columns[6].Width = (int)Math.Round((double)this.treeListView1.Width * 0.125);
@@ -656,5 +688,6 @@ namespace MarketDataAnalyser
             AppConfig.SerialConfig();
             e.RefreshObjects();
         }
+
     }
 }
