@@ -28,10 +28,10 @@ namespace MarketDataAnalyser.Graphique
             //string result = Interaction.InputBox("ID de la structure cible", "MarketData", "1028858195912");
             AppConfig.structureID = ID;
         }
-
-
+        
         public void refreshdata()
         {
+            listBox1.DataSource = null;
             listBox1.Items.Clear();
 
             listBox1.DataSource = AppConfig.AllStructureId;
@@ -104,7 +104,7 @@ namespace MarketDataAnalyser.Graphique
             target.structureID = (long)numericUpDown1.Value;
 
             AppConfig.AllStructureId.Add(target);
-
+            AppConfig.SerialConfig();
             refreshdata();
         }
 
@@ -125,6 +125,7 @@ namespace MarketDataAnalyser.Graphique
             if (auth_listBox1_SelectedValueChanged && listBox1.SelectedItem != null)
             {
                 AppConfig.structureID = (long)numericUpDown1.Value;
+                AppConfig.SerialConfig();
                 this.Close();
             }
         }
