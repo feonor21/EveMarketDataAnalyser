@@ -130,17 +130,17 @@ namespace MarketDataAnalyser.Code.ClassPub
                 return difference;
         }
 
-        public string PriceParse()
+        public double Price()
         {
             double Price = 0;
             foreach (var DoctrineLink in DoctrineLinks)
             {
-                var price = cConfig.Instance.Data.ListItem.Find(x => x.typeID == DoctrineLink.typeID).Price;
+                var price = cConfig.Instance.Data.ListItem.Find(x => x.typeID == DoctrineLink.typeID).StationPrice;
                 Price += price * DoctrineLink.Quantity;
             }
-            return string.Format("{0:#,##0.##} ISK", Price); ;
+            return Price;
         }
-        public string BuyPriceParse()
+        public double BuyPrice()
         {
             double Price = 0;
             foreach (var DoctrineLink in DoctrineLinks)
@@ -148,9 +148,9 @@ namespace MarketDataAnalyser.Code.ClassPub
                 var price = cConfig.Instance.Data.ListItem.Find(x => x.typeID == DoctrineLink.typeID).BuyPrice;
                 Price += price * DoctrineLink.Quantity;
             }
-            return string.Format("{0:#,##0.##} ISK", Price);
+            return Price;
         }
-        public string SellPriceParse()
+        public double SellPrice()
         {
             double Price = 0;
             foreach (var DoctrineLink in DoctrineLinks)
@@ -158,7 +158,7 @@ namespace MarketDataAnalyser.Code.ClassPub
                 var price = cConfig.Instance.Data.ListItem.Find(x => x.typeID == DoctrineLink.typeID).SellPrice;
                 Price += price * DoctrineLink.Quantity;
             }
-            return string.Format("{0:#,##0.##} ISK", Price);
+            return Price;
         }
     }
 

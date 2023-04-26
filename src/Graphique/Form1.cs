@@ -36,10 +36,11 @@ namespace MarketDataAnalyser
         {
             InitializeComponent();
 
+            AppConfig = cConfig.DeserialConfig();
+            
             treeListViewCreate();
             treeListView1resize();
 
-            AppConfig = cConfig.DeserialConfig();
                 
             RefreshMenu();
 
@@ -199,10 +200,10 @@ namespace MarketDataAnalyser
                 {
 
                     e.Item.BackColor = Color.Bisque;
-                    if (marketitem.i_am_seller && marketitem.PricePerso != marketitem.Price)
+                    if (marketitem.i_am_seller && marketitem.MyPrice != marketitem.StationPrice)
                         e.Item.BackColor = Color.LightSkyBlue;
 
-                    if (marketitem.i_am_seller && marketitem.PricePerso == marketitem.Price)
+                    if (marketitem.i_am_seller && marketitem.MyPrice == marketitem.StationPrice)
                         e.Item.BackColor = Color.DarkKhaki;
 
                 }
@@ -210,10 +211,10 @@ namespace MarketDataAnalyser
                 {
 
                     e.Item.BackColor = Color.Violet;
-                    if (marketitem.i_am_seller && marketitem.PricePerso != marketitem.Price)
+                    if (marketitem.i_am_seller && marketitem.MyPrice != marketitem.StationPrice)
                         e.Item.BackColor = Color.RoyalBlue;
 
-                    if (marketitem.i_am_seller && marketitem.PricePerso == marketitem.Price)
+                    if (marketitem.i_am_seller && marketitem.MyPrice == marketitem.StationPrice)
                         e.Item.BackColor = Color.LimeGreen;
 
                 }
@@ -309,15 +310,32 @@ namespace MarketDataAnalyser
             this.treeListView1.Columns.Clear();
             treeListViewCreateColumn("Name", "Name");
             treeListViewCreateColumn("Seuil", "TotalSeuil", "{0:#,##0}");
-            treeListViewCreateColumn("VolumePerso", "VolumePerso", "{0:#,##0}");
+            treeListViewCreateColumn("MyVolume", "VolumePerso", "{0:#,##0}");
             treeListViewCreateColumn("Volume", "Volume", "{0:#,##0}");
             treeListViewCreateColumn("Missing", "VolumeMissing", "{0:#,##0}");
-            treeListViewCreateColumn("BuyPrice", "BuyPriceParse");
-            treeListViewCreateColumn("SellPrice(+20%)", "SellPriceParse");
-            treeListViewCreateColumn("PricePerso", "PricePersoParse");
-            treeListViewCreateColumn("Price", "PriceParse");
+
+            treeListViewCreateColumn("BuyPrice(JITA " + GetPercentageSignedString(AppConfig.coefBuyerJita) + ")", "BuyPrice", "{0:#,##0}");
+            treeListViewCreateColumn("SellPrice(JITA " + GetPercentageSignedString(AppConfig.coefSellerJita) + ")", "SellPrice", "{0:#,##0}");
+            
+            treeListViewCreateColumn("MyPrice", "MyPrice", "{0:#,##0}");
+            treeListViewCreateColumn("StationPrice", "StationPrice", "{0:#,##0}");
             treeListViewCreateColumn("i_am_seller", "i_am_seller");
 
+        }
+        private string GetPercentageSignedString(decimal value)
+        {
+            decimal variation = 0;
+            if (value > 0)
+                variation = (value - 1) * 100;
+            if (value < 0)
+                variation = (1 - value) * 100;
+
+            if (variation > 0)
+                return "+" + Math.Ceiling(variation).ToString() + "%";
+            else if (variation < 0)
+                return Math.Ceiling(variation).ToString() + "%";
+            else
+                return "";
         }
         private void treeListViewCreateColumn(string HeaderText, string PropertyName,string format = "")
         {
@@ -333,7 +351,6 @@ namespace MarketDataAnalyser
             this.treeListView1.Columns.Add(columnHeader);
 
         }
-
         private void treeListView1resize()
         {
             this.treeListView1.Columns[0].Width = (int)Math.Round((double)this.treeListView1.Width * 0.15);
@@ -341,11 +358,12 @@ namespace MarketDataAnalyser
             this.treeListView1.Columns[2].Width = (int)Math.Round((double)this.treeListView1.Width * 0.075);
             this.treeListView1.Columns[3].Width = (int)Math.Round((double)this.treeListView1.Width * 0.075);
             this.treeListView1.Columns[3].Width = (int)Math.Round((double)this.treeListView1.Width * 0.075);
-            this.treeListView1.Columns[4].Width = (int)Math.Round((double)this.treeListView1.Width * 0.125);
-            this.treeListView1.Columns[5].Width = (int)Math.Round((double)this.treeListView1.Width * 0.125);
-            this.treeListView1.Columns[6].Width = (int)Math.Round((double)this.treeListView1.Width * 0.125);
-            this.treeListView1.Columns[7].Width = (int)Math.Round((double)this.treeListView1.Width * 0.125);
-            this.treeListView1.Columns[8].Width = 0;
+            this.treeListView1.Columns[4].Width = (int)Math.Round((double)this.treeListView1.Width * 0.12);
+            this.treeListView1.Columns[5].Width = (int)Math.Round((double)this.treeListView1.Width * 0.12);
+            this.treeListView1.Columns[6].Width = (int)Math.Round((double)this.treeListView1.Width * 0.12);
+            this.treeListView1.Columns[7].Width = (int)Math.Round((double)this.treeListView1.Width * 0.12);
+            this.treeListView1.Columns[8].Width = (int)Math.Round((double)this.treeListView1.Width * 0.12);
+            this.treeListView1.Columns[9].Width = 0;
         }
 
         private async void refreshMarketReel()
@@ -380,7 +398,8 @@ namespace MarketDataAnalyser
                 if (!item.IsBuyOrder && itemmarket != null)
                 {
                     itemmarket.Volume += item.VolumeRemain;
-                    if ((double)item.Price < itemmarket.Price) { itemmarket.Price = (double)item.Price; }
+                    
+                    if (itemmarket.StationPrice == 0 || (double)item.Price < itemmarket.StationPrice) { itemmarket.StationPrice = (double)item.Price; }
                 }
             }
 
@@ -415,7 +434,7 @@ namespace MarketDataAnalyser
                     if (itemmarket == null)
                     {
                         var EsiTypeResult = await EVEEsiInformation.Instance.GetItemAsync(item.TypeId);
-                        itemmarket = new MarketItem() { typeID = item.TypeId, Name = EsiTypeResult.Name, Price = double.MaxValue, PricePerso = double.MaxValue, GroupName = "Undifined" };
+                        itemmarket = new MarketItem() { typeID = item.TypeId, Name = EsiTypeResult.Name, StationPrice = double.MaxValue, MyPrice = double.MaxValue, GroupName = "Undifined" };
                         AppConfig.Data.ListItem.Add(itemmarket);
                     }
 
@@ -423,16 +442,15 @@ namespace MarketDataAnalyser
 
                     itemmarket.i_am_seller = true;
                     itemmarket.VolumePerso += item.VolumeRemain;
-                    if ((double)item.Price < itemmarket.PricePerso) { itemmarket.PricePerso = (double)item.Price; }
+                    if (itemmarket.MyPrice == 0 || (double)item.Price < itemmarket.MyPrice) { itemmarket.MyPrice = (double)item.Price; }
 
                 }
             }
         }
-        private Task refreshMarketReelAllOrderTask(int initialpage, int step, int limit = 5000)
+        private Task refreshMarketReelAllOrderTask(int initialpage, int step, int limit = 50000)
         {
             return Task.Run(async () =>
             {
-
                 for (int i = initialpage; i <= limit; i += step)
                 {
                     var orderpage = await EVEEsiInformation.Instance.GetStructureOrderAsync(AppConfig.structureID, i);
@@ -496,7 +514,7 @@ namespace MarketDataAnalyser
                                 if (order.Date >= DateTime.Now.Date.AddDays(-30))
                                 {
                                     tmpmarket.Volume += order.Volume;
-                                    tmpmarket.Price += (double)(order.Volume * order.Average);
+                                    tmpmarket.StationPrice += (double)(order.Volume * order.Average);
                                 }
                             }
                             if (AppConfig.Data.ListItem.FirstOrDefault(tmp => tmp.typeID == tmpmarket.typeID) != null)

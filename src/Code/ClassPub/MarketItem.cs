@@ -76,45 +76,26 @@ namespace MarketDataAnalyser.Code.ClassPub
                 return difference;
         }
         [JsonIgnore]
-        public double Price { get; set; }
-        public string PriceParse()
-        {
-            if (Price == double.MaxValue)
-                return "N/A";
-            else
-                return string.Format("{0:#,##0.##} ISK", Price); ;
-        }
+        public double StationPrice { get; set; }
+
         [JsonIgnore]
-        public double PricePerso { get; set; }
-        public string PricePersoParse()
-        {
-            if (PricePerso == double.MaxValue)
-                return "N/A";
-            else
-                return string.Format("{0:#,##0.##} ISK", PricePerso);
-        }
+        public double MyPrice { get; set; }
+
         [JsonIgnore]
         public bool i_am_seller { get; set; }
 
         [JsonIgnore]
         public double BuyPrice { get; set; }
-        public string BuyPriceParse()
-        {
-            return string.Format("{0:#,##0.##} ISK", BuyPrice);
-        }
         [JsonIgnore]
         public double SellPrice { get; set; }
-        public string SellPriceParse()
-        {
-            return string.Format("{0:#,##0.##} ISK", SellPrice);
-        }
+
 
         public void CleanMarketInfo()
         {
             Volume = 0;
             VolumePerso = 0;
-            Price = double.MaxValue;
-            PricePerso = double.MaxValue;
+            StationPrice = 0;
+            MyPrice = 0;
             i_am_seller = false;
         }
         public async Task updatePrice()
@@ -129,8 +110,8 @@ namespace MarketDataAnalyser.Code.ClassPub
             await buyTask;
             await sellTask;
 
-            BuyPrice = buyTask.Result;
-            SellPrice = sellTask.Result;
+            BuyPrice = buyTask.Result * (double)cConfig.Instance.coefBuyerJita;
+            SellPrice = sellTask.Result * (double)cConfig.Instance.coefSellerJita;
         }
     }
 }

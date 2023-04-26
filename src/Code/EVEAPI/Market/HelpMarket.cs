@@ -77,10 +77,6 @@ namespace MarketDataAnalyser.Code.EVEAPI.Market
 
         }
 
-
-
-
-
     }
     public class orderPercentileProcessing
     {

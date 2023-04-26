@@ -31,6 +31,8 @@ namespace MarketDataAnalyser
         public string EsiCLientId = null;
         public string EsiSecret = null;
         public string token = null;
+        public decimal coefSellerJita = 1;
+        public decimal coefBuyerJita = 1;
 
 
         public long structureID { get; set; }
