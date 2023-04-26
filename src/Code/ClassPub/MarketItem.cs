@@ -69,7 +69,11 @@ namespace MarketDataAnalyser.Code.ClassPub
         public int VolumePerso { get; set; }
         public long VolumeMissing()
         {
-            return (TotalSeuil()- VolumePerso);
+            var difference = TotalSeuil() - Volume;
+            if (difference < 0)
+                return 0;
+            else
+                return difference;
         }
         [JsonIgnore]
         public decimal Price { get; set; }

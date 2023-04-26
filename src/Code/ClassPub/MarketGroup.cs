@@ -27,5 +27,16 @@ namespace MarketDataAnalyser.Code.ClassPub
 
             return result;
         }
+
+
+        public long Volume()
+        {
+            return items().Sum(x => x.Volume);
+        }
+        public long VolumeMissing()
+        {
+            return items().Sum(x => x.VolumeMissing());
+        }
+
     }
 }
