@@ -380,7 +380,7 @@ namespace MarketDataAnalyser
                 if (!item.IsBuyOrder && itemmarket != null)
                 {
                     itemmarket.Volume += item.VolumeRemain;
-                    if (item.Price < itemmarket.Price) { itemmarket.Price = item.Price; }
+                    if ((double)item.Price < itemmarket.Price) { itemmarket.Price = (double)item.Price; }
                 }
             }
 
@@ -415,7 +415,7 @@ namespace MarketDataAnalyser
                     if (itemmarket == null)
                     {
                         var EsiTypeResult = await EVEEsiInformation.Instance.GetItemAsync(item.TypeId);
-                        itemmarket = new MarketItem() { typeID = item.TypeId, Name = EsiTypeResult.Name, Price = decimal.MaxValue, PricePerso = decimal.MaxValue, GroupName = "Undifined" };
+                        itemmarket = new MarketItem() { typeID = item.TypeId, Name = EsiTypeResult.Name, Price = double.MaxValue, PricePerso = double.MaxValue, GroupName = "Undifined" };
                         AppConfig.Data.ListItem.Add(itemmarket);
                     }
 
@@ -423,7 +423,7 @@ namespace MarketDataAnalyser
 
                     itemmarket.i_am_seller = true;
                     itemmarket.VolumePerso += item.VolumeRemain;
-                    if (item.Price < itemmarket.PricePerso) { itemmarket.PricePerso = item.Price; }
+                    if ((double)item.Price < itemmarket.PricePerso) { itemmarket.PricePerso = (double)item.Price; }
 
                 }
             }
@@ -496,7 +496,7 @@ namespace MarketDataAnalyser
                                 if (order.Date >= DateTime.Now.Date.AddDays(-30))
                                 {
                                     tmpmarket.Volume += order.Volume;
-                                    tmpmarket.Price += (decimal)(order.Volume * order.Average);
+                                    tmpmarket.Price += (double)(order.Volume * order.Average);
                                 }
                             }
                             if (AppConfig.Data.ListItem.FirstOrDefault(tmp => tmp.typeID == tmpmarket.typeID) != null)

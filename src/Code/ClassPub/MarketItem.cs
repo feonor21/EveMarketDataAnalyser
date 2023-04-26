@@ -72,19 +72,19 @@ namespace MarketDataAnalyser.Code.ClassPub
             return (TotalSeuil()- VolumePerso);
         }
         [JsonIgnore]
-        public decimal Price { get; set; }
+        public double Price { get; set; }
         public string PriceParse()
         {
-            if (Price == decimal.MaxValue)
+            if (Price == double.MaxValue)
                 return "N/A";
             else
                 return string.Format("{0:#,##0.##} ISK", Price); ;
         }
         [JsonIgnore]
-        public decimal PricePerso { get; set; }
+        public double PricePerso { get; set; }
         public string PricePersoParse()
         {
-            if (PricePerso == decimal.MaxValue)
+            if (PricePerso == double.MaxValue)
                 return "N/A";
             else
                 return string.Format("{0:#,##0.##} ISK", PricePerso);
@@ -109,8 +109,8 @@ namespace MarketDataAnalyser.Code.ClassPub
         {
             Volume = 0;
             VolumePerso = 0;
-            Price = decimal.MaxValue;
-            PricePerso = decimal.MaxValue;
+            Price = double.MaxValue;
+            PricePerso = double.MaxValue;
             i_am_seller = false;
         }
         public async Task updatePrice()

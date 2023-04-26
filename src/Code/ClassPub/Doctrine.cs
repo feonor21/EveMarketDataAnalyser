@@ -125,6 +125,37 @@ namespace MarketDataAnalyser.Code.ClassPub
         {
             return (TotalSeuil() - Volume());
         }
+
+        public string PriceParse()
+        {
+            double Price = 0;
+            foreach (var DoctrineLink in DoctrineLinks)
+            {
+                var price = cConfig.Instance.Data.ListItem.Find(x => x.typeID == DoctrineLink.typeID).Price;
+                Price += price * DoctrineLink.Quantity;
+            }
+            return string.Format("{0:#,##0.##} ISK", Price); ;
+        }
+        public string BuyPriceParse()
+        {
+            double Price = 0;
+            foreach (var DoctrineLink in DoctrineLinks)
+            {
+                var price = cConfig.Instance.Data.ListItem.Find(x => x.typeID == DoctrineLink.typeID).BuyPrice;
+                Price += price * DoctrineLink.Quantity;
+            }
+            return string.Format("{0:#,##0.##} ISK", Price);
+        }
+        public string SellPriceParse()
+        {
+            double Price = 0;
+            foreach (var DoctrineLink in DoctrineLinks)
+            {
+                var price = cConfig.Instance.Data.ListItem.Find(x => x.typeID == DoctrineLink.typeID).SellPrice;
+                Price += price * DoctrineLink.Quantity;
+            }
+            return string.Format("{0:#,##0.##} ISK", Price);
+        }
     }
 
     public class DoctrineItemLink
