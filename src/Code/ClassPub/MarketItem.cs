@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace MarketDataAnalyser.Code.ClassPub
 {
@@ -76,10 +77,33 @@ namespace MarketDataAnalyser.Code.ClassPub
                 return difference;
         }
         [JsonIgnore]
-        public double StationPrice { get; set; }
+        public double _StationPrice { get; set; }
+        public double StationPrice
+        {
+            get
+            {
+                if (_StationPrice == 0)
+                    return SellPrice;
+                else
+                    return _StationPrice;
+            }   // get method
+            set { _StationPrice = value; }  // set method
+        }
 
         [JsonIgnore]
-        public double MyPrice { get; set; }
+        private double _myPrice;
+        public double MyPrice
+        {
+            get {
+                if (_myPrice == 0)
+                    return SellPrice;
+                else
+                    return _myPrice; 
+            }   // get method
+            set { _myPrice = value; }  // set method
+        }
+
+
 
         [JsonIgnore]
         public bool i_am_seller { get; set; }

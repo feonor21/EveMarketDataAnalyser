@@ -140,6 +140,16 @@ namespace MarketDataAnalyser.Code.ClassPub
             }
             return Price;
         }
+        public double StationPrice()
+        {
+            double Price = 0;
+            foreach (var DoctrineLink in DoctrineLinks)
+            {
+                var price = cConfig.Instance.Data.ListItem.Find(x => x.typeID == DoctrineLink.typeID).StationPrice;
+                Price += price * DoctrineLink.Quantity;
+            }
+            return Price;
+        }
         public double BuyPrice()
         {
             double Price = 0;
