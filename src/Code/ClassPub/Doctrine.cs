@@ -123,7 +123,11 @@ namespace MarketDataAnalyser.Code.ClassPub
         }
         public long VolumeMissing()
         {
-            return (TotalSeuil() - Volume());
+            var difference = TotalSeuil() - Volume();
+            if (difference < 0)
+                return 0;
+            else
+                return difference;
         }
 
         public string PriceParse()
