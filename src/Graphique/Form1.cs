@@ -106,11 +106,13 @@ namespace MarketDataAnalyser
         {
             ModeMarket = 0;
             RefreshMenu();
+            treeListView1resize();
         }
         private void Mode_Doctrine_Click(object sender, EventArgs e)
         {
             ModeMarket = 1;
             RefreshMenu();
+            treeListView1resize();
         }
 
         private async void btn_add_Item_Click(object sender, EventArgs e)
@@ -309,6 +311,7 @@ namespace MarketDataAnalyser
         {
             this.treeListView1.Columns.Clear();
             treeListViewCreateColumn("Name", "Name");
+            treeListViewCreateColumn("Fit", "SeuilFit", "{0:#,##0}");
             treeListViewCreateColumn("Seuil", "TotalSeuil", "{0:#,##0}");
             treeListViewCreateColumn("MyVolume", "VolumePerso", "{0:#,##0}");
             treeListViewCreateColumn("Volume", "Volume", "{0:#,##0}");
@@ -343,27 +346,33 @@ namespace MarketDataAnalyser
             columnHeader.Width = 1;
             columnHeader.Text = HeaderText;
             columnHeader.AspectName = PropertyName;
-            if (format != "")
-                columnHeader.AspectToStringFormat = format;
-            columnHeader.Hideable = false;
+            columnHeader.Hideable = true;
             columnHeader.Searchable = false;
             columnHeader.IsEditable = false;
+            if (format != "")
+                columnHeader.AspectToStringFormat = format;
             this.treeListView1.Columns.Add(columnHeader);
 
         }
         private void treeListView1resize()
         {
             this.treeListView1.Columns[0].Width = (int)Math.Round((double)this.treeListView1.Width * 0.15);
-            this.treeListView1.Columns[1].Width = (int)Math.Round((double)this.treeListView1.Width * 0.075);
-            this.treeListView1.Columns[2].Width = (int)Math.Round((double)this.treeListView1.Width * 0.075);
-            this.treeListView1.Columns[3].Width = (int)Math.Round((double)this.treeListView1.Width * 0.075);
-            this.treeListView1.Columns[3].Width = (int)Math.Round((double)this.treeListView1.Width * 0.075);
-            this.treeListView1.Columns[4].Width = (int)Math.Round((double)this.treeListView1.Width * 0.12);
+            this.treeListView1.Columns[1].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
+            this.treeListView1.Columns[2].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
+            this.treeListView1.Columns[3].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
+            this.treeListView1.Columns[3].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
+            this.treeListView1.Columns[4].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
             this.treeListView1.Columns[5].Width = (int)Math.Round((double)this.treeListView1.Width * 0.12);
             this.treeListView1.Columns[6].Width = (int)Math.Round((double)this.treeListView1.Width * 0.12);
             this.treeListView1.Columns[7].Width = (int)Math.Round((double)this.treeListView1.Width * 0.12);
             this.treeListView1.Columns[8].Width = (int)Math.Round((double)this.treeListView1.Width * 0.12);
-            this.treeListView1.Columns[9].Width = 0;
+            this.treeListView1.Columns[9].Width = (int)Math.Round((double)this.treeListView1.Width * 0.12);
+            this.treeListView1.Columns[10].Width = 0;
+            if (ModeMarket == 0)
+            {
+                this.treeListView1.Columns[1].Width = 0;
+            }
+
         }
 
         private async void refreshMarketReel()
