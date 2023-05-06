@@ -1,4 +1,5 @@
-﻿using MarketDataAnalyser.Code.Divers;
+﻿using EveMarketDataAnalyser.Code.ClassPub;
+using MarketDataAnalyser.Code.Divers;
 using MarketDataAnalyser.EVEAPI;
 using System;
 using System.Collections.Generic;
@@ -95,12 +96,12 @@ namespace MarketDataAnalyser.Code.ClassPub
         {
             DoctrineLinks.Add(new DoctrineItemLink { typeID = marketItemID, Quantity = quantity });
         }
-        public List<MarketItem> items()
+        public List<DoctrineItem> items()
         {
-            List<MarketItem> result = new List<MarketItem>();
+            List<DoctrineItem> result = new List<DoctrineItem>();
             foreach (var i in DoctrineLinks)
             {
-                result.Add(cConfig.Instance.Data.ListItem.Find(x => x.typeID == i.typeID));
+                result.Add(new DoctrineItem(cConfig.Instance.Data.ListItem.First(x => x.typeID == i.typeID),i.Quantity));
             }
             return result;
         }

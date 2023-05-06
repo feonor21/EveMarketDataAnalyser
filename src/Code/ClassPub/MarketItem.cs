@@ -17,6 +17,22 @@ namespace MarketDataAnalyser.Code.ClassPub
         public MarketItem()
         {
         }
+        public MarketItem(MarketItem toCopy)
+        {
+            this.typeID = toCopy.typeID;
+            this.Name = toCopy.Name;
+            this.GroupName = toCopy.GroupName;
+            this.Seuil = toCopy.Seuil;
+            this.Volume = toCopy.Volume;
+            this.VolumePerso = toCopy.VolumePerso;
+            this._StationPrice = toCopy._StationPrice;
+            this._myPrice = toCopy._myPrice;
+            this.i_am_seller = toCopy.i_am_seller;
+            this.BuyPrice = toCopy.BuyPrice;
+            this.SellPrice = toCopy.SellPrice;
+
+        }
+        
         public static async Task CreateMarketItem(string ValueItem)
         {
             int itemID = 0;
