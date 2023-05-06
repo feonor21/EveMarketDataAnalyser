@@ -198,37 +198,28 @@ namespace MarketDataAnalyser
             {
                 MarketItem marketitem = (MarketItem)e.Model;
 
-                if (marketitem.Volume < marketitem.Seuil)
-                {
+                if (marketitem.Volume >= marketitem.TotalSeuil())
+                    e.Item.BackColor = Color.ForestGreen;
 
-                    e.Item.BackColor = Color.Bisque;
-                    if (marketitem.i_am_seller && marketitem.MyPrice != marketitem.StationPrice)
-                        e.Item.BackColor = Color.LightSkyBlue;
+                if (marketitem.Volume < marketitem.TotalSeuil())
+                    e.Item.BackColor = Color.Orange;
 
-                    if (marketitem.i_am_seller && marketitem.MyPrice == marketitem.StationPrice)
-                        e.Item.BackColor = Color.DarkKhaki;
+                if (marketitem.Volume == 0)
+                    e.Item.BackColor = Color.OrangeRed;
 
-                }
-                else
-                {
-
-                    e.Item.BackColor = Color.Violet;
-                    if (marketitem.i_am_seller && marketitem.MyPrice != marketitem.StationPrice)
-                        e.Item.BackColor = Color.RoyalBlue;
-
-                    if (marketitem.i_am_seller && marketitem.MyPrice == marketitem.StationPrice)
-                        e.Item.BackColor = Color.LimeGreen;
-
-                }
             }
             if (e.Model is Doctrine)
             {
                 Doctrine doctrine = (Doctrine)e.Model;
 
-                if (doctrine.Volume() < doctrine.Seuil)
-                    e.Item.BackColor = Color.Bisque;
-                else
-                    e.Item.BackColor = Color.LimeGreen;
+                if (doctrine.Volume() >= doctrine.TotalSeuil())
+                    e.Item.BackColor = Color.ForestGreen;
+
+                if (doctrine.Volume() < doctrine.TotalSeuil())
+                    e.Item.BackColor = Color.Orange;
+
+                if (doctrine.Volume() == 0)
+                    e.Item.BackColor = Color.OrangeRed;
 
             }
 
