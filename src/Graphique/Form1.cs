@@ -37,11 +37,11 @@ namespace MarketDataAnalyser
             InitializeComponent();
 
             AppConfig = cConfig.DeserialConfig();
-            
+
             treeListViewCreate();
             treeListView1resize();
 
-                
+
             RefreshMenu();
 
 
@@ -242,6 +242,75 @@ namespace MarketDataAnalyser
             this.button1.BackColor = Color.Gainsboro;
         }
 
+        private void treeListViewCreate()
+        {
+            this.treeListView1.Columns.Clear();
+            treeListViewCreateColumn("Name", "Name","", false );
+            treeListViewCreateColumn("Fit", "SeuilFit","{0:#,##0}");
+            treeListViewCreateColumn("Seuil", "TotalSeuil", "{0:#,##0}");
+            treeListViewCreateColumn("MyVolume", "VolumePerso", "{0:#,##0}");
+            treeListViewCreateColumn("Volume", "Volume", "{0:#,##0}");
+            treeListViewCreateColumn("Missing", "VolumeMissing", "{0:#,##0}");
+
+            treeListViewCreateColumn("BuyPrice(JITA " + GetPercentageSignedString(AppConfig.coefBuyerJita) + ")", "BuyPrice", "{0:#,##0}");
+            treeListViewCreateColumn("SellPrice(JITA " + GetPercentageSignedString(AppConfig.coefSellerJita) + ")", "SellPrice", "{0:#,##0}");
+
+            treeListViewCreateColumn("MyPrice", "MyPrice", "{0:#,##0}");
+            treeListViewCreateColumn("StationPrice", "StationPrice", "{0:#,##0}");
+
+            this.treeListView1.RebuildColumns();
+        }
+        private string GetPercentageSignedString(decimal value)
+        {
+            decimal variation = 0;
+            if (value > 0)
+                variation = (value - 1) * 100;
+            if (value < 0)
+                variation = (1 - value) * 100;
+
+            if (variation > 0)
+                return "+" + Math.Ceiling(variation).ToString() + "%";
+            else if (variation < 0)
+                return Math.Ceiling(variation).ToString() + "%";
+            else
+                return "";
+        }
+        private void treeListViewCreateColumn(string HeaderText, string PropertyName, string format = "", bool hideable = true)
+        {
+            OLVColumn columnHeader = new BrightIdeasSoftware.OLVColumn();
+            columnHeader.Width = 1;
+            columnHeader.Text = HeaderText;
+            columnHeader.AspectName = PropertyName;
+            columnHeader.Hideable = hideable;
+            columnHeader.Searchable = false;
+            columnHeader.IsEditable = false;
+            if (format != "")
+                columnHeader.AspectToStringFormat = format;
+            this.treeListView1.AllColumns.Add(columnHeader);
+
+        }
+        private void treeListView1resize()
+        {
+            this.treeListView1.Columns[0].Width = (int)Math.Round((double)this.treeListView1.Width * 0.145);
+            this.treeListView1.Columns[1].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
+            this.treeListView1.Columns[2].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
+            this.treeListView1.Columns[3].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
+            this.treeListView1.Columns[3].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
+            this.treeListView1.Columns[4].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
+            this.treeListView1.Columns[5].Width = (int)Math.Round((double)this.treeListView1.Width * 0.11);
+            this.treeListView1.Columns[6].Width = (int)Math.Round((double)this.treeListView1.Width * 0.11);
+            this.treeListView1.Columns[7].Width = (int)Math.Round((double)this.treeListView1.Width * 0.11);
+            this.treeListView1.Columns[8].Width = (int)Math.Round((double)this.treeListView1.Width * 0.11);
+            this.treeListView1.Columns[9].Width = (int)Math.Round((double)this.treeListView1.Width * 0.11);
+            if (ModeMarket == 0)
+            {
+                this.treeListView1.Columns[1].Width = 0;
+            }
+
+        }
+
+
+
         private async void RefreshMenu()
         {
             if (AppConfig.token != null && AppConfig.token != "")
@@ -307,74 +376,6 @@ namespace MarketDataAnalyser
             }
         }
 
-        private void treeListViewCreate()
-        {
-            this.treeListView1.Columns.Clear();
-            treeListViewCreateColumn("Name", "Name");
-            treeListViewCreateColumn("Fit", "SeuilFit", "{0:#,##0}");
-            treeListViewCreateColumn("Seuil", "TotalSeuil", "{0:#,##0}");
-            treeListViewCreateColumn("MyVolume", "VolumePerso", "{0:#,##0}");
-            treeListViewCreateColumn("Volume", "Volume", "{0:#,##0}");
-            treeListViewCreateColumn("Missing", "VolumeMissing", "{0:#,##0}");
-
-            treeListViewCreateColumn("BuyPrice(JITA " + GetPercentageSignedString(AppConfig.coefBuyerJita) + ")", "BuyPrice", "{0:#,##0}");
-            treeListViewCreateColumn("SellPrice(JITA " + GetPercentageSignedString(AppConfig.coefSellerJita) + ")", "SellPrice", "{0:#,##0}");
-            
-            treeListViewCreateColumn("MyPrice", "MyPrice", "{0:#,##0}");
-            treeListViewCreateColumn("StationPrice", "StationPrice", "{0:#,##0}");
-            treeListViewCreateColumn("i_am_seller", "i_am_seller");
-
-        }
-        private string GetPercentageSignedString(decimal value)
-        {
-            decimal variation = 0;
-            if (value > 0)
-                variation = (value - 1) * 100;
-            if (value < 0)
-                variation = (1 - value) * 100;
-
-            if (variation > 0)
-                return "+" + Math.Ceiling(variation).ToString() + "%";
-            else if (variation < 0)
-                return Math.Ceiling(variation).ToString() + "%";
-            else
-                return "";
-        }
-        private void treeListViewCreateColumn(string HeaderText, string PropertyName,string format = "")
-        {
-            OLVColumn columnHeader = new BrightIdeasSoftware.OLVColumn();
-            columnHeader.Width = 1;
-            columnHeader.Text = HeaderText;
-            columnHeader.AspectName = PropertyName;
-            columnHeader.Hideable = true;
-            columnHeader.Searchable = false;
-            columnHeader.IsEditable = false;
-            if (format != "")
-                columnHeader.AspectToStringFormat = format;
-            this.treeListView1.Columns.Add(columnHeader);
-
-        }
-        private void treeListView1resize()
-        {
-            this.treeListView1.Columns[0].Width = (int)Math.Round((double)this.treeListView1.Width * 0.15);
-            this.treeListView1.Columns[1].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
-            this.treeListView1.Columns[2].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
-            this.treeListView1.Columns[3].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
-            this.treeListView1.Columns[3].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
-            this.treeListView1.Columns[4].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
-            this.treeListView1.Columns[5].Width = (int)Math.Round((double)this.treeListView1.Width * 0.12);
-            this.treeListView1.Columns[6].Width = (int)Math.Round((double)this.treeListView1.Width * 0.12);
-            this.treeListView1.Columns[7].Width = (int)Math.Round((double)this.treeListView1.Width * 0.12);
-            this.treeListView1.Columns[8].Width = (int)Math.Round((double)this.treeListView1.Width * 0.12);
-            this.treeListView1.Columns[9].Width = (int)Math.Round((double)this.treeListView1.Width * 0.12);
-            this.treeListView1.Columns[10].Width = 0;
-            if (ModeMarket == 0)
-            {
-                this.treeListView1.Columns[1].Width = 0;
-            }
-
-        }
-
         private async void refreshMarketReel()
         {
             RefreshMenu();
@@ -407,7 +408,7 @@ namespace MarketDataAnalyser
                 if (!item.IsBuyOrder && itemmarket != null)
                 {
                     itemmarket.Volume += item.VolumeRemain;
-                    
+
                     if (itemmarket.StationPrice == 0 || (double)item.Price < itemmarket.StationPrice) { itemmarket.StationPrice = (double)item.Price; }
                 }
             }
@@ -565,6 +566,10 @@ namespace MarketDataAnalyser
             }
         }
 
+
+
+
+        
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
             try
