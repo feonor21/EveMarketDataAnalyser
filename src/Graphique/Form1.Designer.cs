@@ -53,15 +53,6 @@
             DoctrineContente = new TextBox();
             Doctrine_Add = new Button();
             treeListView1 = new BrightIdeasSoftware.TreeListView();
-            olvColumn1 = new BrightIdeasSoftware.OLVColumn();
-            olvColumn3 = new BrightIdeasSoftware.OLVColumn();
-            olvColumn4 = new BrightIdeasSoftware.OLVColumn();
-            olvColumn5 = new BrightIdeasSoftware.OLVColumn();
-            olvColumn9 = new BrightIdeasSoftware.OLVColumn();
-            olvColumn10 = new BrightIdeasSoftware.OLVColumn();
-            olvColumn6 = new BrightIdeasSoftware.OLVColumn();
-            olvColumn7 = new BrightIdeasSoftware.OLVColumn();
-            olvColumn8 = new BrightIdeasSoftware.OLVColumn();
             menuStrip1.SuspendLayout();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)treeListView1).BeginInit();
@@ -263,18 +254,8 @@
             // 
             // treeListView1
             // 
-            treeListView1.AllColumns.Add(olvColumn1);
-            treeListView1.AllColumns.Add(olvColumn3);
-            treeListView1.AllColumns.Add(olvColumn4);
-            treeListView1.AllColumns.Add(olvColumn5);
-            treeListView1.AllColumns.Add(olvColumn9);
-            treeListView1.AllColumns.Add(olvColumn10);
-            treeListView1.AllColumns.Add(olvColumn6);
-            treeListView1.AllColumns.Add(olvColumn7);
-            treeListView1.AllColumns.Add(olvColumn8);
             treeListView1.AllowDrop = true;
             treeListView1.CellEditUseWholeCell = false;
-            treeListView1.Columns.AddRange(new ColumnHeader[] { olvColumn1, olvColumn3, olvColumn4, olvColumn5, olvColumn9, olvColumn10, olvColumn6, olvColumn7, olvColumn8 });
             treeListView1.Dock = DockStyle.Fill;
             treeListView1.FullRowSelect = true;
             treeListView1.IsSimpleDragSource = true;
@@ -287,83 +268,10 @@
             treeListView1.TabIndex = 10;
             treeListView1.UseCompatibleStateImageBehavior = false;
             treeListView1.View = View.Details;
-            treeListView1.VirtualMode = true;
             treeListView1.FormatRow += treeListView1_FormatRow;
             treeListView1.ModelCanDrop += treeListView1_ModelCanDrop;
             treeListView1.ModelDropped += treeListView1_ModelDropped;
             treeListView1.MouseDoubleClick += treeListView1_MouseDoubleClick;
-            // 
-            // olvColumn1
-            // 
-            olvColumn1.AspectName = "Name";
-            olvColumn1.Hideable = false;
-            olvColumn1.IsEditable = false;
-            olvColumn1.Searchable = false;
-            olvColumn1.Text = "GroupName";
-            // 
-            // olvColumn3
-            // 
-            olvColumn3.AspectName = "TotalSeuil";
-            olvColumn3.Hideable = false;
-            olvColumn3.IsEditable = false;
-            olvColumn3.Searchable = false;
-            olvColumn3.Sortable = false;
-            olvColumn3.Text = "Seuil";
-            // 
-            // olvColumn4
-            // 
-            olvColumn4.AspectName = "VolumePerso";
-            olvColumn4.AspectToStringFormat = "{0:#,##0}";
-            olvColumn4.Hideable = false;
-            olvColumn4.Searchable = false;
-            olvColumn4.Text = "VolumePerso";
-            // 
-            // olvColumn5
-            // 
-            olvColumn5.AspectName = "Volume";
-            olvColumn5.AspectToStringFormat = "{0:#,##0}";
-            olvColumn5.Hideable = false;
-            olvColumn5.IsEditable = false;
-            olvColumn5.Searchable = false;
-            olvColumn5.Text = "Volume";
-            // 
-            // olvColumn9
-            // 
-            olvColumn9.AspectName = "BuyPriceParse";
-            olvColumn9.AspectToStringFormat = "";
-            olvColumn9.Text = "BuyPrice";
-            // 
-            // olvColumn10
-            // 
-            olvColumn10.AspectName = "SellPriceParse";
-            olvColumn10.AspectToStringFormat = "";
-            olvColumn10.Text = "SellPrice(+20%)";
-            // 
-            // olvColumn6
-            // 
-            olvColumn6.AspectName = "PricePersoParse";
-            olvColumn6.AspectToStringFormat = "";
-            olvColumn6.Hideable = false;
-            olvColumn6.IsEditable = false;
-            olvColumn6.Searchable = false;
-            olvColumn6.Text = "PricePerso";
-            // 
-            // olvColumn7
-            // 
-            olvColumn7.AspectName = "PriceParse";
-            olvColumn7.AspectToStringFormat = "";
-            olvColumn7.Hideable = false;
-            olvColumn7.IsEditable = false;
-            olvColumn7.Searchable = false;
-            olvColumn7.Text = "Price";
-            // 
-            // olvColumn8
-            // 
-            olvColumn8.AspectName = "i_am_seller";
-            olvColumn8.Hideable = false;
-            olvColumn8.IsEditable = false;
-            olvColumn8.Searchable = false;
-            olvColumn8.Text = "i_am_seller";
             // 
             // Form1
             // 
@@ -399,15 +307,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ToolStripMenuItem Mode_MarketGroup;
         private BrightIdeasSoftware.TreeListView treeListView1;
-        private BrightIdeasSoftware.OLVColumn olvColumn3;
-        private BrightIdeasSoftware.OLVColumn olvColumn4;
-        private BrightIdeasSoftware.OLVColumn olvColumn5;
-        private BrightIdeasSoftware.OLVColumn olvColumn6;
-        private BrightIdeasSoftware.OLVColumn olvColumn7;
-        private BrightIdeasSoftware.OLVColumn olvColumn8;
-        private BrightIdeasSoftware.OLVColumn olvColumn1;
-        private BrightIdeasSoftware.OLVColumn olvColumn9;
-        private BrightIdeasSoftware.OLVColumn olvColumn10;
         private ToolStripMenuItem Mode_Doctrine;
         private Button Doctrine_Add;
         private Label label3;
