@@ -114,6 +114,113 @@ namespace MarketDataAnalyser
             RefreshMenu();
             treeListView1resize();
         }
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string filePath = cConfig.getPathFile();
+                // Ouvre l'explorateur de fichiers et sélectionne le fichier
+                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{filePath}\"");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\MarketDataAnalyser_DATA_" + DateTime.Now.ToString("yyyy_MM_dd") + ".json";
+                AppConfig.ExportData(filePath);
+                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{filePath}\"");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                // Vérifier si l'utilisateur veut remplacer les données existantes
+                if (MessageBox.Show("Voulez-vous vraiment remplacer toutes les données existantes ?", "Confirmation", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                {
+                    var openFileDialog = new OpenFileDialog();
+                    openFileDialog.Filter = "Fichiers JSON (*.json)|*.json|Tous les fichiers (*.*)|*.*";
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        // Lire le fichier JSON sélectionné par l'utilisateur
+                        string jsonText = File.ReadAllText(openFileDialog.FileName);
+
+                        // Désérialiser le JSON dans un objet Personne
+                        cConfigData newData = JsonConvert.DeserializeObject<cConfigData>(jsonText);
+
+                        AppConfig.Data = newData;
+
+                        AppConfig.SerialConfig();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("ptit péteux vas :P");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void exportStructureToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\MarketDataAnalyser_STRUCTURE_" + DateTime.Now.ToString("yyyy_MM_dd") + ".json";
+                AppConfig.ExportStructure(filePath);
+                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{filePath}\"");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Vérifier si l'utilisateur veut remplacer les données existantes
+                if (MessageBox.Show("Voulez-vous vraiment remplacer toutes les Structure existantes ?", "Confirmation", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                {
+                    var openFileDialog = new OpenFileDialog();
+                    openFileDialog.Filter = "Fichiers JSON (*.json)|*.json|Tous les fichiers (*.*)|*.*";
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        // Lire le fichier JSON sélectionné par l'utilisateur
+                        string jsonText = File.ReadAllText(openFileDialog.FileName);
+
+                        // Désérialiser le JSON dans un objet Personne
+                        List<Structure> newData = JsonConvert.DeserializeObject<List<Structure>>(jsonText);
+
+                        AppConfig.AllStructureId = newData;
+
+                        AppConfig.SerialConfig();
+                    }
+                }
+                else
+                {
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
 
         private async void btn_add_Item_Click(object sender, EventArgs e)
         {
@@ -147,83 +254,6 @@ namespace MarketDataAnalyser
             catch (Exception ex)
             { MessageBox.Show(ex.Message, "ERROR : Add Doctrine", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
-
-        private void treeListView1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (this.treeListView1.SelectedItem != null)
-            {
-
-                if (this.treeListView1.SelectedItem.RowObject is MarketItem)
-                {
-                    try
-                    {
-                        MarketItem marketitemtarget = (MarketItem)this.treeListView1.SelectedItem.RowObject;
-                        using (Popup_Edit_Item tmp = new Popup_Edit_Item(marketitemtarget))
-                        {
-                            tmp.ShowDialog();
-                        }
-                        AppConfig.SerialConfig();
-                        RefreshMenu();
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-                }
-
-                if (this.treeListView1.SelectedItem.RowObject is Doctrine)
-                {
-
-                    try
-                    {
-                        Doctrine doctrine = (Doctrine)this.treeListView1.SelectedItem.RowObject;
-                        using (Popup_Edit_doctrine tmp = new Popup_Edit_doctrine(doctrine))
-                        {
-                            tmp.ShowDialog();
-                        }
-                        AppConfig.SerialConfig();
-                        RefreshMenu();
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-                }
-
-            }
-        }
-        private void treeListView1_FormatRow(object sender, BrightIdeasSoftware.FormatRowEventArgs e)
-        {
-            if (e.Model is MarketItem)
-            {
-                MarketItem marketitem = (MarketItem)e.Model;
-
-                if (marketitem.Volume >= marketitem.TotalSeuil())
-                    e.Item.BackColor = Color.ForestGreen;
-
-                if (marketitem.Volume < marketitem.TotalSeuil())
-                    e.Item.BackColor = Color.Orange;
-
-                if (marketitem.Volume == 0)
-                    e.Item.BackColor = Color.OrangeRed;
-
-            }
-            if (e.Model is Doctrine)
-            {
-                Doctrine doctrine = (Doctrine)e.Model;
-
-                if (doctrine.Volume() >= doctrine.TotalSeuil())
-                    e.Item.BackColor = Color.ForestGreen;
-
-                if (doctrine.Volume() < doctrine.TotalSeuil())
-                    e.Item.BackColor = Color.Orange;
-
-                if (doctrine.Volume() == 0)
-                    e.Item.BackColor = Color.OrangeRed;
-
-            }
-
-        }
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
             this.button1.BackColor = Color.DarkBlue;
@@ -236,20 +266,36 @@ namespace MarketDataAnalyser
         private void treeListViewCreate()
         {
             this.treeListView1.Columns.Clear();
-            treeListViewCreateColumn("Name", "Name","", false );
-            treeListViewCreateColumn("Fit", "SeuilFit","{0:#,##0}");
-            treeListViewCreateColumn("Seuil", "TotalSeuil", "{0:#,##0}");
-            treeListViewCreateColumn("MyVolume", "VolumePerso", "{0:#,##0}");
-            treeListViewCreateColumn("Volume", "Volume", "{0:#,##0}");
-            treeListViewCreateColumn("Missing", "VolumeMissing", "{0:#,##0}");
+            this.treeListView2.Columns.Clear();
 
-            treeListViewCreateColumn("BuyPrice(JITA " + GetPercentageSignedString(AppConfig.coefBuyerJita) + ")", "BuyPrice", "{0:#,##0}");
-            treeListViewCreateColumn("SellPrice(JITA " + GetPercentageSignedString(AppConfig.coefSellerJita) + ")", "SellPrice", "{0:#,##0}");
+            treeListViewCreateColumn(this.treeListView1, "Name", "Name", "", false);
+            treeListViewCreateColumn(this.treeListView1, "Fit", "SeuilFit", "{0:#,##0}");
+            treeListViewCreateColumn(this.treeListView1, "Seuil", "TotalSeuil", "{0:#,##0}");
+            treeListViewCreateColumn(this.treeListView1, "MyVolume", "VolumePerso", "{0:#,##0}");
+            treeListViewCreateColumn(this.treeListView1, "Volume", "Volume", "{0:#,##0}");
+            treeListViewCreateColumn(this.treeListView1, "Missing", "VolumeMissing", "{0:#,##0}");
 
-            treeListViewCreateColumn("MyPrice", "MyPrice", "{0:#,##0}");
-            treeListViewCreateColumn("StationPrice", "StationPrice", "{0:#,##0}");
+            treeListViewCreateColumn(this.treeListView1, "BuyPrice(JITA " + GetPercentageSignedString(AppConfig.coefBuyerJita) + ")", "BuyPrice", "{0:#,##0}");
+            treeListViewCreateColumn(this.treeListView1, "SellPrice(JITA " + GetPercentageSignedString(AppConfig.coefSellerJita) + ")", "SellPrice", "{0:#,##0}");
+
+            treeListViewCreateColumn(this.treeListView1, "MyPrice", "MyPrice", "{0:#,##0}");
+            treeListViewCreateColumn(this.treeListView1, "StationPrice", "StationPrice", "{0:#,##0}");
+
+            treeListViewCreateColumn(this.treeListView2, "Name", "Name", "", false);
+            treeListViewCreateColumn(this.treeListView2, "Fit", "SeuilFit", "{0:#,##0}");
+            treeListViewCreateColumn(this.treeListView2, "Seuil", "TotalSeuil", "{0:#,##0}");
+            treeListViewCreateColumn(this.treeListView2, "MyVolume", "VolumePerso", "{0:#,##0}");
+            treeListViewCreateColumn(this.treeListView2, "Volume", "Volume", "{0:#,##0}");
+            treeListViewCreateColumn(this.treeListView2, "Missing", "VolumeMissing", "{0:#,##0}");
+
+            treeListViewCreateColumn(this.treeListView2, "BuyPrice(JITA " + GetPercentageSignedString(AppConfig.coefBuyerJita) + ")", "BuyPrice", "{0:#,##0}");
+            treeListViewCreateColumn(this.treeListView2, "SellPrice(JITA " + GetPercentageSignedString(AppConfig.coefSellerJita) + ")", "SellPrice", "{0:#,##0}");
+
+            treeListViewCreateColumn(this.treeListView2, "MyPrice", "MyPrice", "{0:#,##0}");
+            treeListViewCreateColumn(this.treeListView2, "StationPrice", "StationPrice", "{0:#,##0}");
 
             this.treeListView1.RebuildColumns();
+            this.treeListView2.RebuildColumns();
         }
         private string GetPercentageSignedString(decimal value)
         {
@@ -266,7 +312,7 @@ namespace MarketDataAnalyser
             else
                 return "";
         }
-        private void treeListViewCreateColumn(string HeaderText, string PropertyName, string format = "", bool hideable = true)
+        private void treeListViewCreateColumn(TreeListView target, string HeaderText, string PropertyName, string format = "", bool hideable = true)
         {
             OLVColumn columnHeader = new BrightIdeasSoftware.OLVColumn();
             columnHeader.Width = 1;
@@ -277,25 +323,30 @@ namespace MarketDataAnalyser
             columnHeader.IsEditable = false;
             if (format != "")
                 columnHeader.AspectToStringFormat = format;
-            this.treeListView1.AllColumns.Add(columnHeader);
+            target.AllColumns.Add(columnHeader);
 
         }
         private void treeListView1resize()
         {
-            this.treeListView1.Columns[0].Width = (int)Math.Round((double)this.treeListView1.Width * 0.145);
-            this.treeListView1.Columns[1].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
-            this.treeListView1.Columns[2].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
-            this.treeListView1.Columns[3].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
-            this.treeListView1.Columns[3].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
-            this.treeListView1.Columns[4].Width = (int)Math.Round((double)this.treeListView1.Width * 0.07);
-            this.treeListView1.Columns[5].Width = (int)Math.Round((double)this.treeListView1.Width * 0.11);
-            this.treeListView1.Columns[6].Width = (int)Math.Round((double)this.treeListView1.Width * 0.11);
-            this.treeListView1.Columns[7].Width = (int)Math.Round((double)this.treeListView1.Width * 0.11);
-            this.treeListView1.Columns[8].Width = (int)Math.Round((double)this.treeListView1.Width * 0.11);
-            this.treeListView1.Columns[9].Width = (int)Math.Round((double)this.treeListView1.Width * 0.11);
+            treeListView1resize(this.treeListView1);
+            treeListView1resize(this.treeListView2);
+        }
+        private void treeListView1resize(TreeListView target)
+        {
+            target.Columns[0].Width = (int)Math.Round((double)target.Width * 0.145);
+            target.Columns[1].Width = (int)Math.Round((double)target.Width * 0.07);
+            target.Columns[2].Width = (int)Math.Round((double)target.Width * 0.07);
+            target.Columns[3].Width = (int)Math.Round((double)target.Width * 0.07);
+            target.Columns[3].Width = (int)Math.Round((double)target.Width * 0.07);
+            target.Columns[4].Width = (int)Math.Round((double)target.Width * 0.07);
+            target.Columns[5].Width = (int)Math.Round((double)target.Width * 0.11);
+            target.Columns[6].Width = (int)Math.Round((double)target.Width * 0.11);
+            target.Columns[7].Width = (int)Math.Round((double)target.Width * 0.11);
+            target.Columns[8].Width = (int)Math.Round((double)target.Width * 0.11);
+            target.Columns[9].Width = (int)Math.Round((double)target.Width * 0.11);
             if (ModeMarket == 0)
             {
-                this.treeListView1.Columns[1].Width = 0;
+                target.Columns[1].Width = 0;
             }
 
         }
@@ -560,120 +611,97 @@ namespace MarketDataAnalyser
 
 
 
-        
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        private void treeListView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            try
-            {
-                string filePath = cConfig.getPathFile();
-                // Ouvre l'explorateur de fichiers et sélectionne le fichier
-                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{filePath}\"");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void toolStripMenuItem2_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\MarketDataAnalyser_DATA_" + DateTime.Now.ToString("yyyy_MM_dd") + ".json";
-                AppConfig.ExportData(filePath);
-                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{filePath}\"");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void toolStripMenuItem3_Click(object sender, EventArgs e)
-        {
-            try
+            if (this.treeListView1.SelectedItem != null)
             {
 
-                // Vérifier si l'utilisateur veut remplacer les données existantes
-                if (MessageBox.Show("Voulez-vous vraiment remplacer toutes les données existantes ?", "Confirmation", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                if (this.treeListView1.SelectedItem.RowObject is MarketItem)
                 {
-                    var openFileDialog = new OpenFileDialog();
-                    openFileDialog.Filter = "Fichiers JSON (*.json)|*.json|Tous les fichiers (*.*)|*.*";
-
-                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    try
                     {
-                        // Lire le fichier JSON sélectionné par l'utilisateur
-                        string jsonText = File.ReadAllText(openFileDialog.FileName);
-
-                        // Désérialiser le JSON dans un objet Personne
-                        cConfigData newData = JsonConvert.DeserializeObject<cConfigData>(jsonText);
-
-                        AppConfig.Data = newData;
-
+                        MarketItem marketitemtarget = (MarketItem)this.treeListView1.SelectedItem.RowObject;
+                        using (Popup_Edit_Item tmp = new Popup_Edit_Item(marketitemtarget))
+                        {
+                            tmp.ShowDialog();
+                        }
                         AppConfig.SerialConfig();
+                        RefreshMenu();
+                    }
+                    catch (Exception)
+                    {
+
                     }
                 }
-                else
+
+                if (this.treeListView1.SelectedItem.RowObject is Doctrine)
                 {
-                    MessageBox.Show("ptit péteux vas :P");
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
 
-        private void exportStructureToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\MarketDataAnalyser_STRUCTURE_" + DateTime.Now.ToString("yyyy_MM_dd") + ".json";
-                AppConfig.ExportStructure(filePath);
-                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{filePath}\"");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void toolStripMenuItem4_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // Vérifier si l'utilisateur veut remplacer les données existantes
-                if (MessageBox.Show("Voulez-vous vraiment remplacer toutes les Structure existantes ?", "Confirmation", MessageBoxButtons.OKCancel) == DialogResult.OK)
-                {
-                    var openFileDialog = new OpenFileDialog();
-                    openFileDialog.Filter = "Fichiers JSON (*.json)|*.json|Tous les fichiers (*.*)|*.*";
-
-                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    try
                     {
-                        // Lire le fichier JSON sélectionné par l'utilisateur
-                        string jsonText = File.ReadAllText(openFileDialog.FileName);
-
-                        // Désérialiser le JSON dans un objet Personne
-                        List<Structure> newData = JsonConvert.DeserializeObject<List<Structure>>(jsonText);
-
-                        AppConfig.AllStructureId = newData;
-
+                        Doctrine doctrine = (Doctrine)this.treeListView1.SelectedItem.RowObject;
+                        using (Popup_Edit_doctrine tmp = new Popup_Edit_doctrine(doctrine))
+                        {
+                            tmp.ShowDialog();
+                        }
                         AppConfig.SerialConfig();
+                        RefreshMenu();
+                    }
+                    catch (Exception)
+                    {
+
                     }
                 }
-                else
-                {
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
+
             }
         }
+        private void treeListView1_FormatRow(object sender, BrightIdeasSoftware.FormatRowEventArgs e)
+        {
+            if (e.Model is MarketItem)
+            {
+                MarketItem marketitem = (MarketItem)e.Model;
 
+                if (marketitem.Volume >= marketitem.TotalSeuil())
+                    e.Item.BackColor = Color.ForestGreen;
 
+                if (marketitem.Volume < marketitem.TotalSeuil())
+                    e.Item.BackColor = Color.Orange;
+
+                if (marketitem.Volume == 0)
+                    e.Item.BackColor = Color.OrangeRed;
+
+            }
+            if (e.Model is Doctrine)
+            {
+                Doctrine doctrine = (Doctrine)e.Model;
+
+                if (doctrine.Volume() >= doctrine.TotalSeuil())
+                    e.Item.BackColor = Color.ForestGreen;
+
+                if (doctrine.Volume() < doctrine.TotalSeuil())
+                    e.Item.BackColor = Color.Orange;
+
+                if (doctrine.Volume() == 0)
+                    e.Item.BackColor = Color.OrangeRed;
+
+            }
+
+        }
+        private void treeListView1_SelectionChanged(object sender, EventArgs e)
+        {
+            if (this.treeListView1.SelectedItem != null)
+            {
+                if (this.treeListView1.SelectedItem.RowObject is Doctrine)
+                {
+                    this.treeListView2.SetObjects(((Doctrine)this.treeListView1.SelectedItem.RowObject).items());
+                }
+
+                if (this.treeListView1.SelectedItem.RowObject is MarketGroup)
+                {
+                    this.treeListView2.SetObjects(((MarketGroup)this.treeListView1.SelectedItem.RowObject).items());
+                }
+            }
+        }
         private void treeListView1_ModelCanDrop(object sender, ModelDropEventArgs e)
         {
             if (ModeMarket == 1)
@@ -689,7 +717,6 @@ namespace MarketDataAnalyser
                 e.Effect = DragDropEffects.Move;
 
         }
-
         private void treeListView1_ModelDropped(object sender, ModelDropEventArgs e)
         {
             // If they didn't drop on anything, then don't do anything
@@ -712,5 +739,22 @@ namespace MarketDataAnalyser
             e.RefreshObjects();
         }
 
+        private void treeListView2_FormatRow(object sender, FormatRowEventArgs e)
+        {
+            if (e.Model is MarketItem)
+            {
+                MarketItem marketitem = (MarketItem)e.Model;
+
+                if (marketitem.Volume >= marketitem.TotalSeuil())
+                    e.Item.BackColor = Color.ForestGreen;
+
+                if (marketitem.Volume < marketitem.TotalSeuil())
+                    e.Item.BackColor = Color.Orange;
+
+                if (marketitem.Volume == 0)
+                    e.Item.BackColor = Color.OrangeRed;
+
+            }
+        }
     }
 }

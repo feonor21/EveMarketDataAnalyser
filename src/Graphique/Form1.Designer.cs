@@ -53,9 +53,15 @@
             DoctrineContente = new TextBox();
             Doctrine_Add = new Button();
             treeListView1 = new BrightIdeasSoftware.TreeListView();
+            panel1 = new Panel();
+            treeListView2 = new BrightIdeasSoftware.TreeListView();
+            tableLayoutPanel1 = new TableLayoutPanel();
             menuStrip1.SuspendLayout();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)treeListView1).BeginInit();
+            panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)treeListView2).BeginInit();
+            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
@@ -64,7 +70,7 @@
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 2, 0, 2);
-            menuStrip1.Size = new Size(1234, 24);
+            menuStrip1.Size = new Size(1551, 24);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -151,12 +157,13 @@
             // 
             // button1
             // 
-            button1.Dock = DockStyle.Bottom;
+            tableLayoutPanel1.SetColumnSpan(button1, 3);
+            button1.Dock = DockStyle.Fill;
             button1.Enabled = false;
-            button1.Location = new Point(0, 467);
+            button1.Location = new Point(4, 698);
             button1.Margin = new Padding(4, 3, 4, 3);
             button1.Name = "button1";
-            button1.Size = new Size(1234, 44);
+            button1.Size = new Size(1543, 44);
             button1.TabIndex = 2;
             button1.Text = "Refresh";
             button1.UseVisualStyleBackColor = true;
@@ -200,12 +207,12 @@
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(Doctrine_Add);
             groupBox1.Controls.Add(btn_add_Item);
-            groupBox1.Dock = DockStyle.Left;
-            groupBox1.Location = new Point(0, 24);
+            groupBox1.Dock = DockStyle.Fill;
+            groupBox1.Location = new Point(4, 3);
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(236, 443);
+            groupBox1.Size = new Size(242, 689);
             groupBox1.TabIndex = 8;
             groupBox1.TabStop = false;
             groupBox1.Text = "Item";
@@ -260,27 +267,74 @@
             treeListView1.FullRowSelect = true;
             treeListView1.IsSimpleDragSource = true;
             treeListView1.IsSimpleDropSink = true;
-            treeListView1.Location = new Point(236, 24);
+            treeListView1.Location = new Point(254, 3);
             treeListView1.Margin = new Padding(4, 3, 4, 3);
             treeListView1.Name = "treeListView1";
             treeListView1.ShowGroups = false;
-            treeListView1.Size = new Size(998, 443);
+            treeListView1.Size = new Size(642, 689);
             treeListView1.TabIndex = 10;
             treeListView1.UseCompatibleStateImageBehavior = false;
             treeListView1.View = View.Details;
+            treeListView1.VirtualMode = true;
             treeListView1.FormatRow += treeListView1_FormatRow;
             treeListView1.ModelCanDrop += treeListView1_ModelCanDrop;
             treeListView1.ModelDropped += treeListView1_ModelDropped;
+            treeListView1.SelectionChanged += treeListView1_SelectionChanged;
             treeListView1.MouseDoubleClick += treeListView1_MouseDoubleClick;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(treeListView2);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(903, 3);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(645, 689);
+            panel1.TabIndex = 11;
+            // 
+            // treeListView2
+            // 
+            treeListView2.AllowDrop = true;
+            treeListView2.CellEditUseWholeCell = false;
+            treeListView2.Dock = DockStyle.Fill;
+            treeListView2.FullRowSelect = true;
+            treeListView2.IsSimpleDragSource = true;
+            treeListView2.IsSimpleDropSink = true;
+            treeListView2.Location = new Point(0, 0);
+            treeListView2.Margin = new Padding(4, 3, 4, 3);
+            treeListView2.Name = "treeListView2";
+            treeListView2.ShowGroups = false;
+            treeListView2.Size = new Size(645, 689);
+            treeListView2.TabIndex = 11;
+            treeListView2.UseCompatibleStateImageBehavior = false;
+            treeListView2.View = View.Details;
+            treeListView2.VirtualMode = true;
+            treeListView2.FormatRow += treeListView2_FormatRow;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 3;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 250F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Controls.Add(treeListView1, 1, 0);
+            tableLayoutPanel1.Controls.Add(groupBox1, 0, 0);
+            tableLayoutPanel1.Controls.Add(panel1, 2, 0);
+            tableLayoutPanel1.Controls.Add(button1, 0, 1);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 24);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
+            tableLayoutPanel1.Size = new Size(1551, 745);
+            tableLayoutPanel1.TabIndex = 12;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1234, 511);
-            Controls.Add(treeListView1);
-            Controls.Add(groupBox1);
-            Controls.Add(button1);
+            ClientSize = new Size(1551, 769);
+            Controls.Add(tableLayoutPanel1);
             Controls.Add(menuStrip1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
@@ -292,6 +346,9 @@
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)treeListView1).EndInit();
+            panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)treeListView2).EndInit();
+            tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -320,6 +377,9 @@
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem exportStructureToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItem4;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Panel panel1;
+        private BrightIdeasSoftware.TreeListView treeListView2;
     }
 }
 
