@@ -43,23 +43,22 @@ namespace MarketDataAnalyser.Code.ClassPub
                         {
 
                             var itemraw = lines[i].Split(" x");
-                            quantity = Convert.ToInt32(itemraw[1]);
                             itemName = itemraw[0];
+                            quantity = Convert.ToInt32(itemraw[1]);
                         }
                         catch (Exception)
                         {
 
                         }
                     }
-
-                    if (quantity == 0)
+                    else
                     {
-                        quantity = 1;
                         itemName = lines[i];
+                        quantity = 1;
                     }
 
                     if (!doctrineFit.TryAdd(itemName, quantity))
-                        doctrineFit[itemName] = quantity + 1;
+                        doctrineFit[itemName] += quantity;
 
                 }
             }
