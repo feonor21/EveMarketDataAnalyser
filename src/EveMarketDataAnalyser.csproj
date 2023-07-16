@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ESI.NET" Version="2023.4.15" />
+    <PackageReference Include="ESI.NET" Version="2023.7.15" />
     <PackageReference Include="ObjectListView.Official" Version="2.9.1" />
   
   </ItemGroup>
